@@ -7,7 +7,7 @@
     "enabled": true
   },
   "vars": {
-    "APP_ORIGIN": "https://REPLACE-ME.streamlit.app"
+    "APP_ORIGIN": "https://fpi-demo.streamlit.app"
   },
   "routes": [
     { "pattern": "fpi-demo.alvintola.com", "custom_domain": true }

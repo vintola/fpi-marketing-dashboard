@@ -434,9 +434,19 @@ CSS = """
         background: rgba(238, 237, 232, 0.03) !important;
     }
     [data-baseweb="tag"] {
+        max-width: 100% !important;
         border-radius: 6px !important;
         background: var(--accent-soft) !important;
         color: var(--accent) !important;
+    }
+    [data-baseweb="tag"] span { font-size: 0.62rem !important; }
+    [data-testid="stDateInput"] input { font-size: 0.72rem !important; }
+    [data-testid="stWidgetLabel"] p {
+        font-family: var(--mono) !important;
+        font-size: 0.6rem !important;
+        letter-spacing: 0.10em;
+        text-transform: uppercase;
+        color: var(--muted) !important;
     }
 
     /* Data + controls */

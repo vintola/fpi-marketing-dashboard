@@ -31,7 +31,20 @@ ASSUMPTIONS = [
         "Currency and period",
         "All figures are AUD over the 26 weeks from 27 April to 25 October 2026.",
     ),
+    (
+        "Held quality sessions",
+        "A held quality session is a held sales call that passes the qualification checklist: "
+        "budget confirmed, decision-maker present, purchase window inside 12 months and clear "
+        "intent. The sample assumes 55% for first-time investors, 72% for experienced investors "
+        "and 63% for retirees. Replace these with observed CRM and QA outcomes.",
+    ),
 ]
+
+HELD_QUALITY_RATE = {
+    "First-time investor": 0.55,
+    "Experienced investor": 0.72,
+    "Retiree": 0.63,
+}
 
 STRATEGIC_BETS = [
     (
@@ -57,6 +70,15 @@ STRATEGIC_BETS = [
 ]
 
 KPI_DICTIONARY = [
+    {
+        "Stage": "North star",
+        "KPI": "Held quality sessions",
+        "Definition": "Held sales calls that pass the qualification checklist: budget confirmed, decision-maker present, purchase window inside 12 months and clear intent.",
+        "Formula": "SUM(calls_held x segment quality rate)",
+        "Why it matters": "The North Star joins volume and quality at the point where revenue is created. It is harder to game than registrations or MQLs and makes sales quality, not just lead volume, the target.",
+        "Source / owner": "CRM call outcomes + sales QA checklist; Sales Ops",
+        "Target / guardrail": "Grow 15% QoQ at a flat or falling cost per held quality session",
+    },
     {
         "Stage": "Business & unit economics",
         "KPI": "Marketing spend",
@@ -357,6 +379,17 @@ KPI_DICTIONARY = [
 ]
 
 ACTION_PLAN = [
+    {
+        "Priority": "P0",
+        "Workstream": "Sales quality",
+        "Action": "Introduce a held-call QA checklist and adopt held quality sessions as the North Star, with cost per held quality session in the weekly review.",
+        "Why / evidence": "Registrations and MQLs can rise while held-call quality falls. A quality-adjusted held-session metric keeps sales and marketing focused on the same revenue-creating event.",
+        "KPI moved": "Held quality sessions, held-to-quality rate, cost per HQS",
+        "Owner": "Sales Ops + Marketing Ops",
+        "Timeline": "Weeks 1-2",
+        "Effort": "Low",
+        "Expected impact": "One shared North Star; quality gains become measurable",
+    },
     {
         "Priority": "P0",
         "Workstream": "Measurement",

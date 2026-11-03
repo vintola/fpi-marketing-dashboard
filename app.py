@@ -18,6 +18,7 @@ from plotly.subplots import make_subplots
 from content import (
     ACTION_PLAN,
     ASSUMPTIONS,
+    HELD_QUALITY_RATE,
     KPI_DICTIONARY,
     RECOMMENDED_SPLIT,
     ROADMAP,
@@ -39,25 +40,26 @@ st.set_page_config(
 ACCENT = "#cff45a"
 ACCENT_BRIGHT = "#e0ff8f"
 COOL = "#809bff"
-AMBER = "#ffb86b"
-CORAL = "#ff7a90"
+VIOLET = "#e879f9"
+CORAL = "#ff6b4a"
 TEAL = "#5eead4"
 SLATE = "#9aa0ad"
 GRID = "rgba(238,237,232,0.07)"
 LTV_MULT = 2.2
 
 # Legacy names kept so the existing chart calls keep working; the values now
-# follow the alvintola.com palette.
+# follow the alvintola.com palette. VIOLET replaces amber so warm series no
+# longer sit on top of the lime bars.
 NAVY = ACCENT
-GOLD = AMBER
+GOLD = VIOLET
 BLUE = COOL
 GREEN = TEAL
 RED = CORAL
-PALETTE = [ACCENT, COOL, AMBER, CORAL, TEAL, SLATE]
+PALETTE = [ACCENT, COOL, VIOLET, CORAL, TEAL, SLATE]
 
 CHANNEL_COLORS = {
     "Meta Prospecting": ACCENT,
-    "Meta Retargeting": AMBER,
+    "Meta Retargeting": VIOLET,
     "YouTube In-Stream": CORAL,
     "Google Search": COOL,
     "Google Demand Gen": TEAL,
@@ -65,7 +67,7 @@ CHANNEL_COLORS = {
 SEGMENT_COLORS = {
     "First-time investor": COOL,
     "Experienced investor": ACCENT,
-    "Retiree": AMBER,
+    "Retiree": VIOLET,
 }
 
 CSS = """
@@ -433,13 +435,28 @@ CSS = """
     [data-testid="stSidebar"] [data-baseweb="input"] > div {
         background: rgba(238, 237, 232, 0.03) !important;
     }
-    [data-baseweb="tag"] {
+    [data-testid="stMultiSelectTagsContainer"] [data-tag] {
         max-width: 100% !important;
+        border: 1px solid rgba(207, 244, 90, 0.35) !important;
         border-radius: 6px !important;
-        background: var(--accent-soft) !important;
+        background: rgba(207, 244, 90, 0.12) !important;
         color: var(--accent) !important;
     }
-    [data-baseweb="tag"] span { font-size: 0.62rem !important; }
+    [data-testid="stMultiSelectTagsContainer"] [data-tag] > span {
+        color: var(--accent) !important;
+        font-size: 0.62rem !important;
+    }
+    [data-testid="stMultiSelectTagsContainer"] [data-tag] button {
+        color: var(--accent) !important;
+        background: transparent !important;
+    }
+    [data-testid="stMultiSelectTagsContainer"] [data-tag] svg {
+        stroke: var(--accent) !important;
+    }
+    [data-testid="stMultiSelectTagsContainer"] [data-tag]:hover {
+        border-color: rgba(207, 244, 90, 0.6) !important;
+        background: rgba(207, 244, 90, 0.18) !important;
+    }
     [data-testid="stDateInput"] input { font-size: 0.72rem !important; }
     [data-testid="stWidgetLabel"] p {
         font-family: var(--mono) !important;
@@ -447,6 +464,15 @@ CSS = """
         letter-spacing: 0.10em;
         text-transform: uppercase;
         color: var(--muted) !important;
+    }
+    [data-baseweb="menu"] [role="option"][aria-selected="true"],
+    [data-baseweb="menu"] [aria-selected="true"] {
+        background: rgba(207, 244, 90, 0.16) !important;
+        color: var(--accent) !important;
+    }
+    [data-baseweb="calendar"] [aria-selected="true"] {
+        background: var(--accent) !important;
+        color: #0a0b0e !important;
     }
 
     /* Data + controls */
@@ -533,6 +559,9 @@ def metrics(df: pd.DataFrame) -> dict[str, float]:
     mqls = float(df["mqls"].sum())
     calls = float(df["calls_booked"].sum())
     held = float(df["calls_held"].sum())
+    quality_sessions = (
+        float(df["quality_sessions"].sum()) if "quality_sessions" in df.columns else np.nan
+    )
     clicks = float(df["clicks"].sum())
     impressions = float(df["impressions"].sum())
     sessions = float(df["sessions"].sum())
@@ -548,6 +577,9 @@ def metrics(df: pd.DataFrame) -> dict[str, float]:
         "mqls": mqls,
         "calls": calls,
         "held": held,
+        "quality_sessions": quality_sessions,
+        "cost_per_quality_session": _div(spend, quality_sessions),
+        "held_quality_rate": _div(quality_sessions, held),
         "clicks": clicks,
         "impressions": impressions,
         "sessions": sessions,
@@ -582,6 +614,16 @@ def apply_filters(df, start, end, channels, segments):
         & (df["channel"].isin(channels))
         & (df["segment"].isin(segments))
     ]
+
+
+def add_quality(df: pd.DataFrame) -> pd.DataFrame:
+    if df.empty:
+        return df.assign(quality_rate=np.nan, quality_sessions=np.nan)
+    rates = df["segment"].map(HELD_QUALITY_RATE).astype(float).fillna(0.6)
+    return df.assign(
+        quality_rate=rates,
+        quality_sessions=df["calls_held"].astype(float) * rates,
+    )
 
 
 def channel_summary(df: pd.DataFrame) -> pd.DataFrame:
@@ -661,6 +703,26 @@ def style_fig(fig, height: int = 360, title: str | None = None, legend: bool = T
     return fig
 
 
+def legend_right(fig, width: int = 118):
+    """Vertical legend outside the plot, for charts with many series."""
+    fig.update_layout(
+        legend=dict(
+            orientation="v",
+            x=1.02,
+            xanchor="left",
+            y=0.98,
+            yanchor="top",
+            font=dict(size=9, color="#9aa0ad"),
+            bgcolor="rgba(10,11,14,0.68)",
+            bordercolor="rgba(238,237,232,0.12)",
+            borderwidth=1,
+            itemsizing="constant",
+        ),
+        margin=dict(r=width),
+    )
+    return fig
+
+
 def page_header(title: str, subtitle: str):
     st.markdown(
         f"""
@@ -718,6 +780,7 @@ with st.sidebar:
         "View",
         [
             "Executive summary",
+            "North star",
             "KPI dashboard",
             "Paid media",
             "Lead quality",
@@ -776,7 +839,7 @@ if not channels or not segments:
     st.warning("Select at least one channel and one segment.")
     st.stop()
 
-filtered = apply_filters(FACT, start_date, end_date, channels, segments)
+filtered = add_quality(apply_filters(FACT, start_date, end_date, channels, segments))
 creative_filtered = apply_filters(CREATIVE, start_date, end_date, channels, segments)
 
 if filtered.empty:
@@ -785,12 +848,14 @@ if filtered.empty:
 
 K = metrics(filtered)
 period_days = (pd.Timestamp(end_date) - pd.Timestamp(start_date)).days + 1
-prev_filtered = apply_filters(
-    FACT,
-    pd.Timestamp(start_date) - timedelta(days=period_days),
-    pd.Timestamp(start_date) - timedelta(days=1),
-    channels,
-    segments,
+prev_filtered = add_quality(
+    apply_filters(
+        FACT,
+        pd.Timestamp(start_date) - timedelta(days=period_days),
+        pd.Timestamp(start_date) - timedelta(days=1),
+        channels,
+        segments,
+    )
 )
 PK = metrics(prev_filtered) if not prev_filtered.empty else {key: np.nan for key in K}
 channels_df = channel_summary(filtered)
@@ -1021,7 +1086,7 @@ if page == "Executive summary":
             )
             fig.update_yaxes(tickprefix="$", tickformat=",.0f")
             fig.update_traces(line=dict(width=2), marker=dict(size=4))
-            st.plotly_chart(style_fig(fig, 380, "Weekly CAC by channel"), width="stretch")
+            st.plotly_chart(legend_right(style_fig(fig, 380, "Weekly CAC by channel")), width="stretch")
         else:
             st.info("Not enough member events to plot CAC by week.")
 
@@ -1035,6 +1100,324 @@ if page == "Executive summary":
             "findings into owners and dates.\n"
             "- All data is synthetic. Replace the loader in `data.py` with live ad-platform and HubSpot "
             "exports before making decisions."
+        )
+
+
+# ---------------------------------------------------------------------------
+# North star
+# ---------------------------------------------------------------------------
+
+elif page == "North star":
+    page_header(
+        "Held quality sessions",
+        "The North Star is the number of sales calls that were held and pass the quality "
+        "checklist: budget confirmed, decision-maker present, a purchase window inside 12 "
+        "months and clear intent. It joins volume and quality at the point where revenue is "
+        "created — harder to game than registrations or MQLs.",
+    )
+
+    hqs = K["quality_sessions"]
+    prior_hqs = PK.get("quality_sessions", np.nan)
+    held = K["held"]
+    q_rate = K["held_quality_rate"]
+
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric(
+        "Held quality sessions",
+        num(hqs),
+        delta_str(hqs, prior_hqs),
+        help="Held calls x segment quality rate. The North Star.",
+    )
+    c2.metric(
+        "Cost per HQS",
+        money(K["cost_per_quality_session"]),
+        delta_str(K["cost_per_quality_session"], PK.get("cost_per_quality_session")),
+        delta_color="inverse",
+        help="Media spend / held quality sessions. Excludes sales cost.",
+    )
+    c3.metric(
+        "Held → quality",
+        pct(q_rate),
+        delta_str(q_rate, PK.get("held_quality_rate")),
+        help="Share of held calls that pass the quality checklist.",
+    )
+    c4.metric(
+        "Held sessions",
+        num(held),
+        delta_str(held, PK.get("held")),
+        help="Calls that were booked and attended.",
+    )
+
+    weekly = (
+        filtered.groupby("week_start", as_index=False)
+        .agg(
+            hqs=("quality_sessions", "sum"),
+            held=("calls_held", "sum"),
+            spend=("spend", "sum"),
+        )
+        .sort_values("week_start")
+    )
+    weekly["cost_per_hqs"] = np.where(weekly.hqs > 0, weekly.spend / weekly.hqs, np.nan)
+
+    fig = go.Figure()
+    fig.add_bar(
+        x=weekly.week_start,
+        y=weekly.hqs,
+        name="Held quality sessions",
+        marker_color=ACCENT,
+        hovertemplate="Week of %{x|%d %b}<br>HQS: %{y:,.0f}<extra></extra>",
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=weekly.week_start,
+            y=weekly.cost_per_hqs,
+            name="Cost per HQS",
+            yaxis="y2",
+            mode="lines+markers",
+            line=dict(color=VIOLET, width=2),
+            marker=dict(size=4, color=VIOLET),
+            hovertemplate="Week of %{x|%d %b}<br>Cost per HQS: $%{y:,.0f}<extra></extra>",
+        )
+    )
+    fig = style_fig(fig, 370, "Weekly held quality sessions and cost per HQS")
+    fig.update_layout(
+        yaxis=dict(title="Held quality sessions"),
+        yaxis2=dict(
+            title="Cost per HQS (A$)",
+            overlaying="y",
+            side="right",
+            showgrid=False,
+            tickprefix="$",
+            tickfont=dict(color="#9aa0ad"),
+            title_font=dict(color="#9aa0ad"),
+        ),
+    )
+    st.plotly_chart(fig, width="stretch")
+
+    st.markdown("#### Where the North Star comes from")
+    stages = pd.DataFrame(
+        [
+            ("Impressions", K["impressions"], np.nan, "—"),
+            ("Clicks", K["clicks"], K["ctr"], "CTR"),
+            ("Sessions", K["sessions"], K["lpv_rate"], "Session rate"),
+            ("Registrations", K["regs"], K["reg_rate"], "Registration rate"),
+            ("Attended", K["attended"], K["attendance"], "Attendance rate"),
+            ("MQLs", K["mqls"], K["mql_rate"], "MQL rate"),
+            ("Calls booked", K["calls"], K["call_rate"], "Booking rate"),
+            ("Calls held", K["held"], K["show_rate"], "Show rate"),
+            (
+                "Held quality sessions",
+                K["quality_sessions"],
+                K["held_quality_rate"],
+                "Quality rate",
+            ),
+        ],
+        columns=["Stage", "Count", "Step rate", "Rate label"],
+    )
+    stages["Step rate"] = stages["Step rate"].map(lambda v: pct(v) if pd.notna(v) else "—")
+    stages["Cost per unit"] = np.where(stages.Count > 0, K["spend"] / stages.Count, np.nan)
+    stages["Cost per unit"] = stages["Cost per unit"].map(money)
+    stages["Count"] = stages["Count"].map(num)
+    st.dataframe(
+        stages[["Stage", "Count", "Rate label", "Step rate", "Cost per unit"]],
+        hide_index=True,
+        width="stretch",
+    )
+
+    st.markdown("#### What moves the North Star")
+    st.caption(
+        "Illustrative operating lifts, applied one at a time with everything else held constant. "
+        "Because HQS is multiplicative, a 1% relative improvement in any driver adds about 1% "
+        "HQS; the bars reflect the size of each assumed lift, not an equal-effort comparison."
+    )
+    base_chain = {
+        "CTR": (K["ctr"], 0.0005),
+        "Session rate": (K["lpv_rate"], 0.002),
+        "Registration rate": (K["reg_rate"], 0.0015),
+        "Attendance rate": (K["attendance"], 0.02),
+        "MQL rate": (K["mql_rate"], 0.015),
+        "Booking rate": (K["call_rate"], 0.015),
+        "Show rate": (K["show_rate"], 0.02),
+        "Quality rate": (K["held_quality_rate"], 0.02),
+    }
+    base_hqs = K["quality_sessions"]
+    sens_rows = []
+    for name, (rate, lift) in base_chain.items():
+        factors = {
+            "CTR": K["ctr"],
+            "Session rate": K["lpv_rate"],
+            "Registration rate": K["reg_rate"],
+            "Attendance rate": K["attendance"],
+            "MQL rate": K["mql_rate"],
+            "Booking rate": K["call_rate"],
+            "Show rate": K["show_rate"],
+            "Quality rate": K["held_quality_rate"],
+        }
+        factors[name] = min(rate + lift, 0.98)
+        new_hqs = (
+            K["spend"]
+            * (1000 / K["cpm"])
+            * factors["CTR"]
+            * factors["Session rate"]
+            * factors["Registration rate"]
+            * factors["Attendance rate"]
+            * factors["MQL rate"]
+            * factors["Booking rate"]
+            * factors["Show rate"]
+            * factors["Quality rate"]
+        )
+        sens_rows.append(
+            {
+                "Driver": name,
+                "Assumed lift": f"+{lift * 100:.1f} pts",
+                "New HQS": new_hqs,
+                "HQS lift": new_hqs - base_hqs,
+                "Cost per HQS after": _div(K["spend"], new_hqs),
+            }
+        )
+    sens = pd.DataFrame(sens_rows).sort_values("HQS lift", ascending=False)
+
+    fig = px.bar(
+        sens.sort_values("HQS lift"),
+        x="HQS lift",
+        y="Driver",
+        orientation="h",
+        text="HQS lift",
+        color="HQS lift",
+        color_continuous_scale=[[0, "#2a3442"], [1, ACCENT]],
+    )
+    fig.update_traces(
+        texttemplate="%{text:,.0f} HQS",
+        textposition="outside",
+        cliponaxis=False,
+    )
+    fig.update_layout(coloraxis_showscale=False, xaxis_title="Additional held quality sessions")
+    st.plotly_chart(
+        style_fig(fig, 360, "HQS impact of a realistic lift in each driver", legend=False),
+        width="stretch",
+    )
+    st.dataframe(
+        sens,
+        hide_index=True,
+        width="stretch",
+        column_config={
+            "New HQS": st.column_config.NumberColumn(format="%.0f"),
+            "HQS lift": st.column_config.NumberColumn(format="+%.0f"),
+            "Cost per HQS after": st.column_config.NumberColumn(format="$%.0f"),
+        },
+    )
+
+    st.markdown("#### What it costs by channel")
+    by_ch = (
+        filtered.groupby("channel", as_index=False)
+        .agg(
+            spend=("spend", "sum"),
+            held=("calls_held", "sum"),
+            hqs=("quality_sessions", "sum"),
+            members=("members", "sum"),
+            revenue=("revenue", "sum"),
+        )
+    )
+    by_ch["cost_per_hqs"] = np.where(by_ch.hqs > 0, by_ch.spend / by_ch.hqs, np.nan)
+    by_ch["quality_rate"] = np.where(by_ch.held > 0, by_ch.hqs / by_ch.held, np.nan)
+    by_ch["cac"] = np.where(by_ch.members > 0, by_ch.spend / by_ch.members, np.nan)
+    by_ch = by_ch.sort_values("cost_per_hqs")
+
+    fig = px.bar(
+        by_ch,
+        x="cost_per_hqs",
+        y="channel",
+        orientation="h",
+        text=by_ch["cost_per_hqs"].map(money),
+        color="cost_per_hqs",
+        color_continuous_scale=[[0, ACCENT], [1, CORAL]],
+        category_orders={"channel": by_ch.channel.tolist()},
+    )
+    fig.update_traces(textposition="outside", cliponaxis=False)
+    fig.update_layout(
+        coloraxis_showscale=False,
+        xaxis_title="Cost per held quality session (A$)",
+    )
+    fig.update_xaxes(tickprefix="$", tickformat=",.0f")
+    st.plotly_chart(
+        style_fig(fig, 340, "Cost per held quality session by channel", legend=False),
+        width="stretch",
+    )
+    st.dataframe(
+        pd.DataFrame(
+            {
+                "Channel": by_ch.channel,
+                "Spend": by_ch.spend.map(money),
+                "Held": by_ch.held.map(num),
+                "Quality rate": by_ch.quality_rate.map(pct),
+                "HQS": by_ch.hqs.map(num),
+                "Cost per HQS": by_ch.cost_per_hqs.map(money),
+                "CAC": by_ch.cac.map(money),
+            }
+        ),
+        hide_index=True,
+        width="stretch",
+    )
+
+    cheapest = by_ch.iloc[0]
+    top_driver = sens.iloc[0]
+    i1, i2, i3 = st.columns(3)
+    insight(
+        i1,
+        "Cheapest quality",
+        cheapest.channel,
+        f"{money(cheapest.cost_per_hqs)} per held quality session, versus "
+        f"{money(K['cost_per_quality_session'])} blended.",
+    )
+    insight(
+        i2,
+        "Biggest lever",
+        f"{top_driver['Driver']} {top_driver['Assumed lift']}",
+        f"Adds about {num(top_driver['HQS lift'])} held quality sessions at the same spend.",
+    )
+    insight(
+        i3,
+        "Quality rate",
+        pct(q_rate),
+        f"{num(hqs)} of {num(held)} held calls pass the checklist.",
+    )
+
+    st.markdown("#### Scenario: lift show rate and quality")
+    s1, s2 = st.columns(2)
+    show_lift = s1.slider("Show-rate improvement (pts)", 0, 10, 3, 1)
+    qual_lift = s2.slider("Quality-rate improvement (pts)", 0, 10, 3, 1)
+    new_show = min(K["show_rate"] + show_lift / 100, 0.95)
+    new_qual = min(K["held_quality_rate"] + qual_lift / 100, 0.95)
+    new_held = K["calls"] * new_show
+    new_hqs = new_held * new_qual
+    new_cost = _div(K["spend"], new_hqs)
+
+    m1, m2, m3, m4 = st.columns(4)
+    m1.metric("Projected HQS", num(new_hqs), delta_str(new_hqs, hqs))
+    m2.metric("Incremental HQS", num(new_hqs - hqs))
+    m3.metric(
+        "Cost per HQS",
+        money(new_cost),
+        delta_str(new_cost, K["cost_per_quality_session"]),
+        delta_color="inverse",
+    )
+    m4.metric("Held sessions", num(new_held), delta_str(new_held, held))
+    st.caption(
+        "Assumes spend and upstream volume hold. Quality improvements usually require sales "
+        "training, tighter qualification or better lead scoring; that cost is not modeled."
+    )
+
+    with st.expander("How held quality sessions are defined"):
+        st.markdown(
+            "- A **held quality session** is a sales call that was held and passes the QA "
+            "checklist: budget confirmed, decision-maker present, purchase window inside 12 "
+            "months and clear intent.\n"
+            "- The sample applies segment quality rates: first-time 55%, experienced 72%, "
+            "retiree 63%. Replace these with observed CRM and QA outcomes.\n"
+            "- **Cost per HQS** is media spend / held quality sessions. It excludes sales cost, "
+            "training and tooling.\n"
+            "- The driver lifts are illustrative, not forecasts; each is applied one at a time "
+            "with the rest of the funnel held constant."
         )
 
 
@@ -1140,7 +1523,7 @@ elif page == "KPI dashboard":
         )
         fig.update_yaxes(title_text="Rate", ticksuffix="%")
         fig.update_traces(line=dict(width=2), marker=dict(size=4))
-        st.plotly_chart(style_fig(fig, 380, "Weekly conversion rates"), width="stretch")
+        st.plotly_chart(legend_right(style_fig(fig, 380, "Weekly conversion rates")), width="stretch")
 
     with right:
         st.markdown("**Segment performance**")
@@ -1276,7 +1659,7 @@ elif page == "Paid media":
             )
             fig.update_xaxes(title_text="CAC (A$)", tickprefix="$", tickformat=",.0f")
             fig.update_yaxes(title_text="ROAS", ticksuffix="x", tickformat=".1f")
-            st.plotly_chart(style_fig(fig, 380, "CAC versus ROAS (bubble = share of spend)"), width="stretch")
+            st.plotly_chart(legend_right(style_fig(fig, 380, "CAC versus ROAS (bubble = share of spend)")), width="stretch")
         else:
             st.info("Not enough member events to plot channel efficiency.")
 
@@ -1294,7 +1677,7 @@ elif page == "Paid media":
             color_discrete_map=CHANNEL_COLORS,
         )
         fig.update_yaxes(title_text="Spend (A$)", tickprefix="$", tickformat="~s")
-        st.plotly_chart(style_fig(fig, 380, "Weekly spend mix"), width="stretch")
+        st.plotly_chart(legend_right(style_fig(fig, 380, "Weekly spend mix")), width="stretch")
 
     st.markdown("#### Reallocation scenario")
     st.markdown(

@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "alvintola-fpi-demo-proxy",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-11-03",
+  "observability": {
+    "enabled": true
+  },
+  "vars": {
+    "APP_ORIGIN": "https://REPLACE-ME.streamlit.app"
+  },
+  "routes": [
+    { "pattern": "fpi-demo.alvintola.com", "custom_domain": true }
+  ]
+}

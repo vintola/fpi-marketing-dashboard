@@ -1,0 +1,1034 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>From attention to membership — Freedom Property Investors</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Adwaita Sans", "Liberation Sans", Arial, sans-serif;
+    color: #1B2A3A;
+    font-size: 9.8pt;
+    line-height: 1.45;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm;
+    height: 296mm;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+    background: #FFFFFF;
+    padding: 14mm 15mm 16mm;
+  }
+  .page:last-child { page-break-after: auto; }
+  .page-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    font-size: 7pt; letter-spacing: .13em; text-transform: uppercase;
+    color: #7A8B99; border-bottom: .35pt solid #DDE3EA;
+    padding-bottom: 2.2mm; margin-bottom: 6.5mm;
+  }
+  .page-header strong { color: #0B2545; font-weight: 700; }
+  .page-footer {
+    position: absolute; left: 15mm; right: 15mm; bottom: 7.5mm;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 6.8pt; letter-spacing: .06em; color: #8A98A8;
+    border-top: .35pt solid #E6E9EE; padding-top: 2mm;
+  }
+  .footer-right { min-width: 18mm; text-align: right; }
+
+  h1, h2, h3, h4 { color: #0B2545; margin: 0; font-weight: 700; }
+  h2 { font-size: 21pt; line-height: 1.12; letter-spacing: -.02em; margin-bottom: 2.2mm; }
+  h3 { font-size: 12.2pt; line-height: 1.2; margin-bottom: 1.4mm; }
+  h4 { font-size: 10.2pt; line-height: 1.25; margin-bottom: 1mm; }
+  p { margin: 0 0 2.5mm; }
+  ul { margin: 0 0 2.5mm 4.2mm; padding: 0; }
+  li { margin-bottom: 1.2mm; }
+  .kicker {
+    font-size: 7.2pt; letter-spacing: .14em; text-transform: uppercase;
+    color: #9A762B; font-weight: 700; margin-bottom: 1.6mm;
+  }
+  .lead { font-size: 11.6pt; line-height: 1.45; color: #33465A; margin-bottom: 4mm; }
+  .small { font-size: 8.2pt; line-height: 1.38; color: #5B6B7C; }
+  .tiny { font-size: 7.2pt; line-height: 1.35; color: #6B7A8A; }
+  .muted { color: #5B6B7C; }
+  .gold { color: #A47F2B; }
+  .navy { color: #0B2545; }
+  .green { color: #1B7F5A; }
+  .red { color: #A63A3A; }
+  .mono { font-family: "JetBrainsMono Nerd Font", "Liberation Mono", monospace; }
+
+  /* Cover */
+  .cover {
+    background: linear-gradient(145deg, #071A30 0%, #0B2545 55%, #153E68 100%);
+    color: #FFFFFF; padding: 20mm 18mm 18mm; overflow: hidden;
+  }
+  .cover .cover-tag {
+    display: inline-block; border: .6pt solid rgba(200,162,74,.55);
+    background: rgba(200,162,74,.12); color: #E8CF92;
+    font-size: 7.2pt; letter-spacing: .16em; text-transform: uppercase;
+    padding: 1.6mm 3.6mm; border-radius: 999px; margin-bottom: 12mm;
+  }
+  .cover h1 {
+    color: #FFFFFF; font-size: 42pt; line-height: 1.02; letter-spacing: -.035em;
+    margin: 0 0 5mm; max-width: 150mm;
+  }
+  .cover .cover-sub {
+    color: #D6E0EB; font-size: 14pt; line-height: 1.35; max-width: 130mm;
+    margin-bottom: 0;
+  }
+  .cover-chart { position: absolute; right: -8mm; bottom: 38mm; width: 132mm; opacity: .95; }
+  .cover-meta {
+    position: absolute; left: 18mm; right: 18mm; bottom: 30mm;
+    display: grid; grid-template-columns: 1fr 1.25fr 1fr; gap: 6mm;
+    border-top: .5pt solid rgba(255,255,255,.22); padding-top: 5mm;
+  }
+  .cover-meta span {
+    display: block; font-size: 6.8pt; letter-spacing: .13em; text-transform: uppercase;
+    color: #9FB3C8; margin-bottom: 1mm;
+  }
+  .cover-meta strong { display: block; font-size: 9.2pt; color: #FFFFFF; font-weight: 600; }
+  .cover-note {
+    position: absolute; left: 18mm; right: 18mm; bottom: 12mm;
+    font-size: 6.8pt; color: #93A7BC; line-height: 1.4;
+    border-left: 1.2pt solid #C8A24A; padding-left: 3mm;
+  }
+  .cover-brand {
+    position: absolute; left: 18mm; top: 18mm;
+    font-size: 7.4pt; letter-spacing: .18em; text-transform: uppercase; color: #C8A24A;
+    font-weight: 700;
+  }
+
+  /* Layout */
+  .two-col { display: grid; grid-template-columns: 1.32fr .92fr; gap: 7mm; }
+  .two-col-even { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+  .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; }
+  .four-col { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3.2mm; }
+  .section { margin-bottom: 5mm; }
+  .divider { height: .4pt; background: #E2E8EF; margin: 4mm 0; }
+
+  /* Cards and callouts */
+  .card {
+    background: #F7F9FB; border: .4pt solid #E2E8EF; border-radius: 2.2mm;
+    padding: 3.6mm 4mm;
+  }
+  .card-white { background: #FFFFFF; border: .4pt solid #E2E8EF; border-radius: 2.2mm; padding: 3.6mm 4mm; }
+  .callout {
+    background: #F8F4E9; border-left: 2.6pt solid #C8A24A;
+    padding: 3.4mm 4.2mm; margin: 3mm 0; border-radius: 0 1.6mm 1.6mm 0;
+  }
+  .callout strong { color: #0B2545; }
+  .dark-box {
+    background: linear-gradient(120deg, #0B2545 0%, #163A63 100%);
+    color: #FFFFFF; border-radius: 2.4mm; padding: 5mm 5.5mm; margin: 3mm 0;
+  }
+  .dark-box h3, .dark-box h4 { color: #FFFFFF; }
+  .dark-box .kicker { color: #E8CF92; }
+  .dark-box p, .dark-box li { color: #DCE5EF; }
+  .dark-box .formula { color: #FFFFFF; font-size: 8.6pt; line-height: 1.6; }
+  .dark-box .formula b { color: #E8CF92; }
+  .insight-label {
+    display: inline-block; font-size: 6.6pt; letter-spacing: .12em; text-transform: uppercase;
+    background: #0B2545; color: #FFFFFF; padding: .8mm 2.2mm; border-radius: 999px; margin-bottom: 1.4mm;
+    font-weight: 700;
+  }
+
+  /* Findings */
+  .finding-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3.6mm; margin: 3mm 0 4mm; }
+  .finding {
+    background: #FFFFFF; border: .4pt solid #E2E8EF; border-top: 2.4pt solid #C8A24A;
+    border-radius: 1.8mm; padding: 3.6mm 3.8mm;
+  }
+  .finding .num { font-size: 7pt; letter-spacing: .12em; color: #A47F2B; font-weight: 700; margin-bottom: 1.4mm; }
+  .finding h4 { margin-bottom: 1.2mm; }
+  .finding p { font-size: 8.5pt; line-height: 1.4; color: #405268; margin: 0; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; }
+  .data-table { font-size: 7.9pt; line-height: 1.34; }
+  .data-table thead th {
+    background: #0B2545; color: #FFFFFF; text-align: left; font-weight: 600;
+    padding: 2mm 2.2mm; font-size: 7.2pt; letter-spacing: .03em;
+  }
+  .data-table td { padding: 1.9mm 2.2mm; border-bottom: .35pt solid #E4E9EF; vertical-align: top; }
+  .data-table tbody tr:nth-child(even) td { background: #F8FAFC; }
+  .data-table .label { font-weight: 600; color: #0B2545; }
+  .fact-table { font-size: 8.1pt; line-height: 1.35; }
+  .fact-table td { padding: 1.5mm 0; border-bottom: .35pt solid #E4E9EF; vertical-align: top; }
+  .fact-table td:first-child { color: #6B7A8A; width: 38%; padding-right: 3mm; }
+  .fact-table td:last-child { color: #1B2A3A; font-weight: 500; }
+
+  /* Stats */
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+  .stat { background: #F7F9FB; border: .4pt solid #E2E8EF; border-radius: 2mm; padding: 3mm 3.4mm; }
+  .stat .value { font-size: 18pt; line-height: 1; font-weight: 700; color: #0B2545; letter-spacing: -.03em; }
+  .stat .label { font-size: 7pt; letter-spacing: .08em; text-transform: uppercase; color: #6B7A8A; margin-top: 1.2mm; }
+
+  /* Funnel */
+  .funnel { margin: 2.5mm 0 3.5mm; }
+  .funnel-row { display: grid; grid-template-columns: 25mm 1fr 63mm; gap: 3mm; align-items: center; margin-bottom: 1.7mm; }
+  .funnel-label { font-size: 7.8pt; font-weight: 700; color: #0B2545; text-align: right; }
+  .funnel-bar {
+    height: 8.4mm; border-radius: 1.4mm; display: flex; align-items: center;
+    padding: 0 2.6mm; color: #FFFFFF; font-size: 7.1pt; font-weight: 600;
+    background: linear-gradient(90deg, #0B2545, #2E6F95);
+  }
+  .funnel-row:nth-child(2) .funnel-bar { background: linear-gradient(90deg, #0B2545, #2A6288); }
+  .funnel-row:nth-child(3) .funnel-bar { background: linear-gradient(90deg, #123658, #2E6F95); }
+  .funnel-row:nth-child(4) .funnel-bar { background: linear-gradient(90deg, #1B4A70, #8A6A25); }
+  .funnel-row:nth-child(5) .funnel-bar { background: linear-gradient(90deg, #5E4515, #8A6A25); }
+  .funnel-row:nth-child(6) .funnel-bar { background: linear-gradient(90deg, #6B4F18, #9A762B); }
+  .funnel-row:nth-child(7) .funnel-bar { background: linear-gradient(90deg, #7A5C1F, #A47F2B); }
+  .funnel-note { font-size: 7pt; line-height: 1.3; color: #5B6B7C; }
+  .funnel-note b { color: #0B2545; }
+
+  /* Challenge cards */
+  .challenge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3.4mm; }
+  .challenge {
+    background: #FFFFFF; border: .4pt solid #E2E8EF; border-radius: 1.8mm;
+    padding: 3.4mm 3.8mm;
+  }
+  .challenge .num { font-size: 7pt; color: #A47F2B; font-weight: 700; letter-spacing: .1em; margin-bottom: 1mm; }
+  .challenge h4 { font-size: 9.4pt; margin-bottom: 1.2mm; }
+  .challenge p { font-size: 8pt; line-height: 1.38; color: #405268; margin-bottom: 1.4mm; }
+  .challenge .counter { font-size: 7.4pt; line-height: 1.35; color: #5B6B7C; border-top: .35pt solid #E4E9EF; padding-top: 1.2mm; }
+  .challenge .counter b { color: #1B7F5A; }
+
+  /* Evidence bars */
+  .evidence { background: #F7F9FB; border: .4pt solid #E2E8EF; border-radius: 2mm; padding: 3.4mm 4mm; }
+  .bar-row { display: grid; grid-template-columns: 24mm 1fr 17mm; gap: 2.5mm; align-items: center; margin-bottom: 1.7mm; font-size: 7.6pt; }
+  .bar-row .bar-track { height: 3.2mm; background: #E9EEF4; border-radius: 999px; overflow: hidden; }
+  .bar-row .bar-fill { height: 100%; border-radius: 999px; background: #C8A24A; }
+  .bar-row b { text-align: right; font-size: 7.6pt; color: #0B2545; }
+  .bar-row .bar-fill.red { background: #B23A3A; }
+
+  /* KPI tree */
+  .north-star-node {
+    background: linear-gradient(120deg, #0B2545, #163A63); color: #FFFFFF;
+    border-radius: 2.4mm; padding: 4.4mm 5mm; margin-bottom: 3.6mm;
+    border-left: 3mm solid #C8A24A;
+  }
+  .north-star-node .kicker { color: #E8CF92; margin-bottom: 1mm; }
+  .north-star-node h3 { color: #FFFFFF; font-size: 15pt; margin-bottom: 1mm; }
+  .north-star-node p { color: #DCE5EF; margin: 0; font-size: 8.4pt; }
+  .tree-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 3mm; }
+  .tree-branch { border: .4pt solid #E2E8EF; border-top: 2pt solid #2E6F95; border-radius: 1.6mm; padding: 3mm 3.2mm; background: #FFFFFF; }
+  .tree-branch h4 { font-size: 8.6pt; margin-bottom: 1.5mm; }
+  .tree-branch ul { margin-left: 3.4mm; margin-bottom: 0; }
+  .tree-branch li { font-size: 7.3pt; line-height: 1.3; color: #4D5F73; margin-bottom: 1mm; }
+
+  /* Flow */
+  .flow { display: flex; align-items: stretch; gap: 1.2mm; margin: 3mm 0; }
+  .flow-step {
+    flex: 1; background: #F7F9FB; border: .4pt solid #E2E8EF; border-radius: 1.6mm;
+    padding: 2.8mm 2.2mm; text-align: center; font-size: 7.2pt; line-height: 1.3; color: #0B2545; font-weight: 600;
+  }
+  .flow-step span { display: block; font-weight: 400; color: #6B7A8A; font-size: 6.6pt; margin-top: .8mm; }
+  .flow-arrow { display: flex; align-items: center; color: #C8A24A; font-size: 11pt; font-weight: 700; }
+
+  /* Recommendations */
+  .rec-list { counter-reset: rec; }
+  .rec { display: grid; grid-template-columns: 8mm 1fr; gap: 3mm; padding: 1.45mm 0; border-bottom: .35pt solid #E4E9EF; }
+  .rec:last-child { border-bottom: none; }
+  .rec .n {
+    width: 7mm; height: 7mm; border-radius: 50%; background: #0B2545; color: #FFFFFF;
+    display: flex; align-items: center; justify-content: center; font-size: 8pt; font-weight: 700;
+  }
+  .rec h4 { margin-bottom: .45mm; font-size: 9.2pt; }
+  .rec p { margin: 0; font-size: 7.8pt; line-height: 1.3; color: #405268; }
+
+  .avoid { background: #FBF2F2; border-left: 2.6pt solid #B23A3A; border-radius: 0 1.6mm 1.6mm 0; padding: 3.2mm 4mm; }
+  .avoid strong { color: #8E2F2F; }
+
+  .source-list { font-size: 7.6pt; line-height: 1.5; color: #405268; }
+  .source-list li { margin-bottom: 1.6mm; }
+  .source-list a { color: #2E6F95; text-decoration: none; }
+
+  .page-title-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1mm; }
+  .page-title-meta .tag { font-size: 6.8pt; letter-spacing: .12em; text-transform: uppercase; color: #9A762B; font-weight: 700; }
+  .footnote { font-size: 6.9pt; line-height: 1.38; color: #7A8B99; }
+</style>
+</head>
+<body>
+
+<!-- ============================== 1. COVER ============================== -->
+<section class="page cover">
+  <div class="cover-brand">Freedom Property Investors · Marketing review</div>
+  <div class="cover-tag">Paid media &amp; marketing analysis</div>
+  <h1>From attention<br>to membership</h1>
+  <p class="cover-sub">How Freedom Property Investors turns marketing into revenue — and what to measure next</p>
+
+  <svg class="cover-chart" viewBox="0 0 520 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g opacity="0.95">
+      <rect x="18" y="196" width="42" height="82" rx="5" fill="#2E6F95"/>
+      <rect x="82" y="162" width="42" height="116" rx="5" fill="#2E6F95"/>
+      <rect x="146" y="132" width="42" height="146" rx="5" fill="#C8A24A"/>
+      <rect x="210" y="104" width="42" height="174" rx="5" fill="#2E6F95"/>
+      <rect x="274" y="72" width="42" height="206" rx="5" fill="#C8A24A"/>
+      <rect x="338" y="98" width="42" height="180" rx="5" fill="#2E6F95"/>
+      <rect x="402" y="44" width="42" height="234" rx="5" fill="#C8A24A"/>
+      <rect x="466" y="18" width="42" height="260" rx="5" fill="#2E6F95"/>
+    </g>
+    <path d="M30 184 L102 146 L166 156 L236 112 L300 122 L370 76 L436 84 L494 34"
+          stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="30" cy="184" r="6" fill="#FFFFFF"/>
+    <circle cx="166" cy="156" r="6" fill="#FFFFFF"/>
+    <circle cx="300" cy="122" r="6" fill="#FFFFFF"/>
+    <circle cx="436" cy="84" r="6" fill="#FFFFFF"/>
+    <circle cx="494" cy="34" r="7" fill="#C8A24A"/>
+  </svg>
+
+  <div class="cover-meta">
+    <div><span>Prepared</span><strong>October 2026</strong></div>
+    <div><span>Scope</span><strong>Marketing, conversion &amp; measurement</strong></div>
+    <div><span>Basis</span><strong>Public information only</strong></div>
+  </div>
+  <p class="cover-note">Independent analyst review. Not affiliated with Freedom Property Investors. Membership pricing, CAC, conversion rates, revenue mix and retention are not public; figures marked “illustrative” are analytical models, not company results.</p>
+</section>
+
+<!-- ============================== 2. EXEC SUMMARY ============================== -->
+<section class="page">
+  <div class="page-header"><span><strong>Freedom Property Investors</strong> · Marketing &amp; conversion analysis</span><span>Executive summary</span></div>
+
+  <div class="kicker">The short version</div>
+  <h2>It is a trust business with a lead-generation front end.</h2>
+  <p class="lead">Freedom does not sell a commodity online. It sells a high-consideration advisory relationship, backed by research, access and an end-to-end team. The website creates belief; the masterclass creates intent; the sales conversation converts intent into a member. That distinction changes what marketing should optimise.</p>
+
+  <div class="finding-grid">
+    <div class="finding">
+      <div class="num">01 · THE ENGINE</div>
+      <h4>The masterclass is the hinge, not the website.</h4>
+      <p>The site is a handover, not a closer. Paid attention is converted into a free masterclass registration, then into attendance, then into a one-to-one strategy conversation. The real revenue event happens after the website has done its job.</p>
+    </div>
+    <div class="finding">
+      <div class="num">02 · THE LEAK</div>
+      <h4>The biggest losses are after registration.</h4>
+      <p>Registration is the easy part. Attendance, consultation booking, show-up and close are where high-ticket funnels usually break. A 10-point attendance gain can lift members by roughly 25% at the same media spend — and cut CAC by about 20%.</p>
+    </div>
+    <div class="finding">
+      <div class="num">03 · THE CONSTRAINT</div>
+      <h4>Last-click ROAS is not safe for budget decisions.</h4>
+      <p>The purchase is high-ticket, multi-touch and often closed offline. Platform ROAS over-credits retargeting and brand search, under-credits upper-funnel video, and cannot see the member. Without CRM-to-platform feedback, media buys the wrong event.</p>
+    </div>
+    <div class="finding">
+      <div class="num">04 · THE FRICTION</div>
+      <h4>Proof is strong but inconsistent.</h4>
+      <p>Public pages cite 1,600+, 2,000+, 2,200+ and 2,600+ Google reviews, and live Lorem Ipsum still appears in key sections. In a trust purchase, inconsistency is not cosmetic; it is a conversion tax on every paid click.</p>
+    </div>
+  </div>
+
+  <div class="dark-box">
+    <div class="kicker">Recommended North Star</div>
+    <h3 style="font-size:15pt; margin-bottom:1.4mm;">Incremental New Members at Target CAC</h3>
+    <p style="margin-bottom:2.4mm;">One growth number — net new paying members, measured incrementally — governed by three guardrails: a fully loaded CAC ceiling derived from LTV, a 90-day retention/refund check, and incremental ROAS.</p>
+    <p class="formula" style="margin:0;"><b>Count what pays.</b> Measure what caused it. Protect the economics.</p>
+  </div>
+
+  <div class="two-col" style="margin-top:3.2mm;">
+    <div>
+      <h3>What I would do first</h3>
+      <ul class="small" style="margin-bottom:0;">
+        <li><b>Close the measurement loop.</b> Push HubSpot member events back to Meta and Google as offline conversions.</li>
+        <li><b>Fix proof and trust.</b> One review count, no placeholder copy, one clear hero promise.</li>
+        <li><b>Treat the masterclass as a product.</b> Registration, reminders, attendance, replay and booking are separate conversion problems.</li>
+        <li><b>Set a CAC ceiling from LTV and payback.</b> Do not let platform ROAS set the budget.</li>
+      </ul>
+    </div>
+    <div class="callout" style="margin:0;">
+      <strong>Analyst take.</strong> The opportunity is not to spend more. It is to convert more of the attention the brand already earns, and to prove which attention creates members. That is a measurement and middle-of-funnel problem before it is a media-buying problem.
+    </div>
+  </div>
+
+  <div class="page-footer"><span>Independent analysis · Public information only · October 2026</span><span class="footer-right"></span></div>
+</section>
+
+<!-- ============================== 3. COMPANY SNAPSHOT ============================== -->
+<section class="page">
+  <div class="page-header"><span><strong>Freedom Property Investors</strong> · Marketing &amp; conversion analysis</span><span>Company snapshot</span></div>
+
+  <div class="kicker">01 · The company</div>
+  <h2>A premium, data-led property advisory with a founder-led media engine.</h2>
+  <p class="lead">Freedom positions itself as Australia’s leading property investment advisory, helping time-poor Australians buy high-growth, high-yield investment property with research and an end-to-end team behind them.</p>
+
+  <div class="two-col">
+    <div>
+      <h3>What it sells</h3>
+      <p>More than a property recommendation. The observable offer is a structured advisory relationship: a personal investment plan, financial positioning, property selection against a proprietary 13-point criteria, finance and legal support, tax and depreciation guidance, rental guarantees and ongoing portfolio reviews.</p>
+
+      <h3>Who it serves</h3>
+      <ul class="small">
+        <li><b>First-time investors</b> who want to start safely and do not know where to begin.</li>
+        <li><b>Experienced investors</b> who want to scale a portfolio and access off-market or pre-market opportunities.</li>
+        <li><b>People approaching retirement</b> who want to convert income and equity into a property-led retirement plan.</li>
+      </ul>
+
+      <h3>How it reaches the market</h3>
+      <p>The front end is education-led: free live masterclasses, free investor resources, founder and expert media appearances, social content, search, and a content hub at <span class="mono">australianpropertyupdate.com.au</span>. The back end is human: a strategy conversation, then an advisory relationship.</p>
+
+      <div class="callout" style="margin-top:3mm;">
+        <strong>Positioning in one sentence.</strong> “For busy Australians who want property wealth but lack the time, data or network to do it alone, Freedom provides research-led selection and an end-to-end team that handles the complexity.”
+      </div>
+    </div>
+
+    <div>
+      <div class="card-white">
+        <h3 style="font-size:10.8pt; margin-bottom:2mm;">Public fact base</h3>
+        <table class="fact-table">
+          <tr><td>Positioning</td><td>“Australia’s #1 Property Investment Advisory” (company claim)</td></tr>
+          <tr><td>Members</td><td>10,000+ (company claim)</td></tr>
+          <tr><td>Team</td><td>300+ full-time property experts (company claim)</td></tr>
+          <tr><td>Transactions</td><td>$4 billion+ of property transactions (company claim)</td></tr>
+          <tr><td>Reviews</td><td>2,600+ 5-star Google reviews, 4.8 rating (homepage); other pages show 1,600+, 2,000+ and 2,200+</td></tr>
+          <tr><td>Founders</td><td>Scott Kuru (Founder &amp; CEO) and Lianna Pan (co-founder; qualified actuary and data scientist)</td></tr>
+          <tr><td>Footprint</td><td>Sydney and Melbourne offices; national advisory model</td></tr>
+          <tr><td>Recognition</td><td>AFR #3 fastest-growing company; featured across Nine, Sky News, Domain, REA and others (company-stated)</td></tr>
+          <tr><td>Tech signal</td><td>HubSpot forms and CRM; masterclass landing pages; news and insights hub</td></tr>
+        </table>
+        <p class="tiny" style="margin:2mm 0 0;">Figures are as published on the website in October 2026. They have not been independently verified.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="three-col">
+    <div>
+      <h4>Observable</h4>
+      <p class="tiny">Positioning, offers, service lines, proof assets, funnel steps, content strategy and public claims. Enough to reconstruct the customer journey.</p>
+    </div>
+    <div>
+      <h4>Inferred</h4>
+      <p class="tiny">Revenue mix, membership price, CAC, conversion rates, retention and sales capacity. These are modelled from the model’s logic, not disclosed.</p>
+    </div>
+    <div>
+      <h4>Not available</h4>
+      <p class="tiny">Contribution margin, refund rates, cohort LTV, channel-level spend and close rates. This review does not pretend to know them; it shows what to measure.</p>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>Independent analysis · Public information only · October 2026</span><span class="footer-right"></span></div>
+</section>
+
+<!-- ============================== 4. CONVERSION SYSTEM ============================== -->
+<section class="page">
+  <div class="page-header"><span><strong>Freedom Property Investors</strong> · Marketing &amp; conversion analysis</span><span>The conversion system</span></div>
+
+  <div class="kicker">02 · How marketing becomes revenue</div>
+  <h2>From attention to membership, in seven handoffs.</h2>
+  <p class="lead">The marketing system is not a website checkout. It is a chain of belief-building and qualification steps, each with a different conversion rate and a different owner.</p>
+
+  <div class="funnel">
+    <div class="funnel-row">
+      <div class="funnel-label">Attention</div>
+      <div class="funnel-bar" style="width:100%;">Paid + organic</div>
+      <div class="funnel-note">Paid social, YouTube, search, founder media, organic and referrals. <b>Job:</b> qualified reach.</div>
+    </div>
+    <div class="funnel-row">
+      <div class="funnel-label">Capture</div>
+      <div class="funnel-bar" style="width:91%;">Registration</div>
+      <div class="funnel-note">Free masterclass, investor resources, direct “Talk to an Expert”. <b>Metric:</b> registration rate, CPL.</div>
+    </div>
+    <div class="funnel-row">
+      <div class="funnel-label">Belief</div>
+      <div class="funnel-bar" style="width:82%;">Live masterclass</div>
+      <div class="funnel-note">Data/actuary proof, member results, media, guarantees. <b>Metric:</b> attendance, replay.</div>
+    </div>
+    <div class="funnel-row">
+      <div class="funnel-label">Qualification</div>
+      <div class="funnel-bar" style="width:73%;">Consult booked</div>
+      <div class="funnel-note">Expert Q&amp;A, fit/readiness check, consultation booking. <b>Metric:</b> MQL, booking rate.</div>
+    </div>
+    <div class="funnel-row">
+      <div class="funnel-label">Close</div>
+      <div class="funnel-bar" style="width:62%;">Membership</div>
+      <div class="funnel-note">One-to-one strategy session → advisory agreement. <b>Metric:</b> show, close, CAC.</div>
+    </div>
+    <div class="funnel-row">
+      <div class="funnel-label">Deliver</div>
+      <div class="funnel-bar" style="width:51%;">Delivery</div>
+      <div class="funnel-note">Property, finance, legal, tax, rental guarantees, portfolio reviews. <b>Metric:</b> activation, retention.</div>
+    </div>
+    <div class="funnel-row">
+      <div class="funnel-label">Expand</div>
+      <div class="funnel-bar" style="width:39%;">Referral loop</div>
+      <div class="funnel-note">Repeat purchases, renewals, referrals, reviews. <b>Metric:</b> LTV, referral share, NPS.</div>
+    </div>
+  </div>
+
+  <div class="dark-box" style="margin-top:2mm;">
+    <div class="kicker">The revenue equation</div>
+    <p class="formula" style="margin-bottom:1.6mm;">Revenue = Reach × Registration × Attendance × MQL × Booking × Show × Close × First-year value × Retention</p>
+    <p style="margin:0; font-size:8.4pt;">Every marketing decision should be judged by which term it moves — and whether it moves that term profitably. Most reporting stops at “registration”, which is only the second term.</p>
+  </div>
+
+  <div class="two-col" style="margin-top:3.2mm;">
+    <div>
+      <h3>The website’s real job</h3>
+      <p>It creates enough belief and clarity for a qualified prospect to trade their time for a masterclass or a call. It is a handover to a human sales process, not the place where the sale closes. That means the right website metrics are <b>registration rate, booking rate and show rate</b> — not “add to cart”.</p>
+      <h3>The masterclass’s real job</h3>
+      <p>It converts attention into intent by combining education, authority, proof and a next step. The offer bundles four promises — tax reduction, mortgage freedom, boom locations and early retirement — which broadens appeal but also increases the need for qualification.</p>
+    </div>
+    <div class="card">
+      <h3 style="font-size:10.8pt;">Three implications</h3>
+      <ul class="small" style="margin-bottom:0;">
+        <li><b>Do not optimise to the lead.</b> A cheap registration that never attends is a cost, not an asset.</li>
+        <li><b>Do not judge the website on revenue.</b> Judge it on qualified handoffs; judge the sales team on close.</li>
+        <li><b>Do not scale media without sales capacity.</b> The constraint moves from clicks to consultations to closers as spend rises.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>Independent analysis · Public information only · October 2026</span><span class="footer-right"></span></div>
+</section>
+
+<!-- ============================== 5. REVENUE MODEL ============================== -->
+<section class="page">
+  <div class="page-header"><span><strong>Freedom Property Investors</strong> · Marketing &amp; conversion analysis</span><span>Revenue model</span></div>
+
+  <div class="kicker">03 · The economics</div>
+  <h2>What the model implies for acquisition economics.</h2>
+  <p class="lead">The public site does not disclose pricing or revenue mix. But the shape of the offer tells us what must be true economically: high first-year value, a long consideration cycle, and a meaningful share of lifetime value created after the first sale.</p>
+
+  <div class="two-col">
+    <div>
+      <h3>Inferred revenue streams</h3>
+      <table class="data-table">
+        <thead><tr><th>Stream</th><th>Role</th><th>Confidence</th><th>Marketing implication</th></tr></thead>
+        <tbody>
+          <tr><td class="label">Membership / advisory fees</td><td>Primary acquisition event</td><td>High</td><td>Justifies a high CAC; must be measured on payback and retention.</td></tr>
+          <tr><td class="label">Property transaction / referral economics</td><td>Deal-linked, lumpy</td><td>Medium</td><td>Aligns marketing with transaction volume and partner capacity.</td></tr>
+          <tr><td class="label">Finance / brokerage</td><td>Attach and retention</td><td>Medium</td><td>Raises LTV; adds credit-compliance obligations.</td></tr>
+          <tr><td class="label">Tax and accounting</td><td>Attach / cross-sell</td><td>Medium-high</td><td>Strengthens the end-to-end promise; supports retention.</td></tr>
+          <tr><td class="label">Property management / partner services</td><td>Retention and referral</td><td>Low-medium</td><td>Increases lifetime value; needs partner quality control.</td></tr>
+          <tr><td class="label">Events and education</td><td>Top-of-funnel / brand</td><td>Low</td><td>Useful for demand creation; should not be judged on direct ROAS.</td></tr>
+        </tbody>
+      </table>
+      <p class="tiny" style="margin-top:2mm;">Inferred from public positioning, service descriptions and brand assets. Not company-confirmed. Treat as a hypothesis to validate with finance.</p>
+    </div>
+
+    <div>
+      <div class="card" style="margin-bottom:3mm;">
+        <h3 style="font-size:10.8pt;">Why LTV matters more than AOV</h3>
+        <p class="small" style="margin-bottom:1.6mm;">In a high-ticket advisory, first-year revenue is not the right ceiling for CAC. If a member buys again, refers, or attaches finance and tax services, the lifetime contribution can be multiples of the first fee. The business can rationally pay more than first-year revenue to acquire the right member.</p>
+        <p class="small" style="margin:0;">But that logic only holds if <b>retention, refunds and attach rates</b> are measured. Otherwise a high LTV assumption becomes a licence to overspend.</p>
+      </div>
+
+      <div class="dark-box" style="margin-top:0;">
+        <div class="kicker">Illustrative funnel math</div>
+        <table class="fact-table" style="font-size:8pt; color:#DCE5EF;">
+          <tr><td style="color:#9FB3C8;">Qualified reach</td><td style="color:#FFFFFF;">100,000</td></tr>
+          <tr><td style="color:#9FB3C8;">Registration rate</td><td style="color:#FFFFFF;">2.0% → 2,000</td></tr>
+          <tr><td style="color:#9FB3C8;">Attendance</td><td style="color:#FFFFFF;">40% → 800</td></tr>
+          <tr><td style="color:#9FB3C8;">MQL rate</td><td style="color:#FFFFFF;">50% → 400</td></tr>
+          <tr><td style="color:#9FB3C8;">Consultations booked</td><td style="color:#FFFFFF;">40% → 160</td></tr>
+          <tr><td style="color:#9FB3C8;">Show rate</td><td style="color:#FFFFFF;">70% → 112</td></tr>
+          <tr><td style="color:#9FB3C8;">Close rate</td><td style="color:#FFFFFF;">15% → 16.8 members</td></tr>
+        </table>
+        <p class="tiny" style="color:#DCE5EF; margin:2mm 0 0;">At an illustrative $12k first-year value, that is ~$201k of revenue. At $50k media spend, media CAC is ~$2,976 and ROAS ~4.0. This is a model, not a benchmark.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:3mm;">
+    <strong>The analyst’s read.</strong> Freedom’s model can support a premium CAC, but only if the business knows three things it does not publish: contribution margin per member, cohort retention, and the true cost of the sales organisation. Those three numbers — not the ad-platform ROAS — should set the acquisition budget.
+  </div>
+
+  <div class="page-footer"><span>Independent analysis · Public information only · October 2026</span><span class="footer-right"></span></div>
+</section>
+
+<!-- ============================== 6. MARKETING CHALLENGES ============================== -->
+<section class="page">
+  <div class="page-header"><span><strong>Freedom Property Investors</strong> · Marketing &amp; conversion analysis</span><span>Marketing challenges</span></div>
+
+  <div class="kicker">04 · Challenges</div>
+  <h2>Attention is not the scarce resource. Trust is.</h2>
+  <p class="lead">The category is crowded, expensive and sceptical. The marketing challenge is to make a high-ticket promise credible at scale, without looking like the noise it competes with.</p>
+
+  <div class="challenge-grid">
+    <div class="challenge">
+      <div class="num">01</div>
+      <h4>Trust at scale in a sceptical category</h4>
+      <p>Property investment has a long tail of aggressive education and get-rich-quick operators. Buyers arrive with defences up. Generic promises about “boom locations” or “tax to zero” can trigger scepticism rather than desire.</p>
+      <div class="counter"><b>Countermeasure:</b> specific, verifiable proof; named experts; transparent process; conservative claims; strong disclaimers.</div>
+    </div>
+    <div class="challenge">
+      <div class="num">02</div>
+      <h4>A commoditised masterclass offer</h4>
+      <p>“Free masterclass + boom locations + tax reduction” is a widely copied format. The offer is strong, but not unique. Differentiation has to come from the quality of the research, the calibre of the live experts and the specificity of the outcomes.</p>
+      <div class="counter"><b>Countermeasure:</b> lead with proprietary data and a live expert experience, not the generic promise.</div>
+    </div>
+    <div class="challenge">
+      <div class="num">03</div>
+      <h4>Rising paid costs and creative fatigue</h4>
+      <p>Meta and YouTube costs rise with competition and frequency. Founder-led video can fatigue quickly; the same face and the same four promises lose stopping power. Creative is a variable cost, not a one-off asset.</p>
+      <div class="counter"><b>Countermeasure:</b> a creative factory with founder, data, member-story and expert formats; refresh before CAC moves.</div>
+    </div>
+    <div class="challenge">
+      <div class="num">04</div>
+      <h4>Founder and key-person dependency</h4>
+      <p>Scott and Lianna are the brand’s credibility. That is an asset, but also a concentration risk: scaling spend without scaling the faces and voices of the brand limits reach and resilience.</p>
+      <div class="counter"><b>Countermeasure:</b> build a bench of named experts and member advocates; diversify formats and channels.</div>
+    </div>
+    <div class="challenge">
+      <div class="num">05</div>
+      <h4>Multi-segment complexity</h4>
+      <p>First-time investors, experienced investors and retirees have different motivations, objections, risk tolerance, price sensitivity and lifetime value. One hero message and one nurture sequence under-serve all three.</p>
+      <div class="counter"><b>Countermeasure:</b> segment-specific offers, proof and sales playbooks; measure CAC and LTV by segment.</div>
+    </div>
+    <div class="challenge">
+      <div class="num">06</div>
+      <h4>Regulatory and platform risk</h4>
+      <p>Financial and property claims, testimonials, “#1” positioning and performance examples attract scrutiny. Meta and Google also impose verification, targeting and creative restrictions on financial products and services.</p>
+      <div class="counter"><b>Countermeasure:</b> a substantiation file, legal review, compliant creative templates and a single source of truth for claims.</div>
+    </div>
+  </div>
+
+  <div class="evidence" style="margin-top:3mm;">
+    <div class="two-col-even">
+      <div>
+        <h4>Proof is a conversion asset — and it is inconsistent</h4>
+        <p class="small" style="margin-bottom:2mm;">Google review counts observed across public pages in October 2026. On a high-trust purchase, four different numbers create doubt and weaken every other claim.</p>
+        <div class="bar-row"><span>Homepage</span><div class="bar-track"><div class="bar-fill" style="width:100%;"></div></div><b>2,600+</b></div>
+        <div class="bar-row"><span>Homepage block</span><div class="bar-track"><div class="bar-fill" style="width:85%;"></div></div><b>2,200+</b></div>
+        <div class="bar-row"><span>Homepage block</span><div class="bar-track"><div class="bar-fill" style="width:77%;"></div></div><b>2,000+</b></div>
+        <div class="bar-row"><span>Masterclass pages</span><div class="bar-track"><div class="bar-fill red" style="width:62%;"></div></div><b>1,600+</b></div>
+      </div>
+      <div>
+        <h4>Also live on the site</h4>
+        <p class="small" style="margin-bottom:1.6mm;">Lorem Ipsum placeholder copy appears in the “Our Values” section and in the 300+ experts service cards. This is visible to prospects arriving from paid media, including high-intent search traffic.</p>
+        <div class="callout" style="margin:0; background:#FFFFFF;">
+          <strong>Quick win:</strong> one verified review count, one proof page, no placeholder copy. This is a low-effort, high-certainty conversion improvement that does not require media spend.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>Independent analysis · Public information only · October 2026</span><span class="footer-right"></span></div>
+</section>
+
+<!-- ============================== 7. CONVERSION CHALLENGES ============================== -->
+<section class="page">
+  <div class="page-header"><span><strong>Freedom Property Investors</strong> · Marketing &amp; conversion analysis</span><span>Conversion challenges</span></div>
+
+  <div class="kicker">05 · Challenges</div>
+  <h2>The money leaks after the form fill.</h2>
+  <p class="lead">Most paid-media reviews over-invest in the top of the funnel because that is where the platforms show data. In a high-ticket advisory, the larger variance is usually in attendance, follow-up speed, show rates and close rates.</p>
+
+  <table class="data-table">
+    <thead><tr><th style="width:18%;">Leak</th><th style="width:27%;">Why it happens</th><th style="width:27%;">What it does to the business</th><th style="width:28%;">What to do</th></tr></thead>
+    <tbody>
+      <tr><td class="label">Registration → attendance</td><td>Free offer, low commitment, time-zone friction, weak reminders.</td><td>CPL understates cost per attended lead; sales gets no conversation.</td><td>Calendar holds, SMS + email cadence, live Q&amp;A, replay window, attendance-based scoring.</td></tr>
+      <tr><td class="label">Attendance → consultation</td><td>Unclear next step, fear of a sales pitch, no urgency.</td><td>Strong masterclass produces weak pipeline.</td><td>In-session booking, a named expert handoff, a specific next-step offer, same-day follow-up.</td></tr>
+      <tr><td class="label">Consultation show rate</td><td>Low qualification, long gap between booking and call, no pre-call value.</td><td>Sales capacity is consumed by no-shows; CAC rises.</td><td>Lead scoring, pre-call assets, reminders, rescheduling automation, capacity-aware booking.</td></tr>
+      <tr><td class="label">Close rate</td><td>Price shock, trust gaps, poor fit, variable sales skill.</td><td>Media efficiency is blamed for a sales-enablement problem.</td><td>Value framing, risk reversal, playbooks, call QA, segment-specific objection handling.</td></tr>
+      <tr><td class="label">Speed to lead</td><td>Manual routing, business hours, lead volume spikes.</td><td>High-intent prospects cool; booking and show rates fall.</td><td>Five-minute SLA, round-robin routing, instant booking link, escalation alerts.</td></tr>
+      <tr><td class="label">Lead quality</td><td>Broad promises attract curiosity, not capital; weak qualification.</td><td>Cheap leads look efficient and destroy sales productivity.</td><td>Qualification criteria, better targeting, value-based bidding, predictive lead scoring.</td></tr>
+      <tr><td class="label">Long lag and offline close</td><td>High-ticket decisions take weeks or months; the sale closes in CRM, not on the site.</td><td>Last-click misallocates budget; upper-funnel looks worse than it is.</td><td>Offline conversions, cohort windows, first-touch + last-touch, geo holdouts.</td></tr>
+      <tr><td class="label">Sales capacity and consistency</td><td>300+ experts, multiple segments, uneven lead flow.</td><td>Scaling spend saturates the best closers and dilutes quality.</td><td>Capacity model, routing by segment, playbooks, QA, ramp plans tied to media spend.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="two-col" style="margin-top:3mm;">
+    <div class="callout" style="margin:0;">
+      <strong>Sensitivity matters more than benchmarks.</strong> A 10-point attendance gain (40% → 50%) raises members by 25% at the same spend and lowers CAC by 20%. A 10% CPL reduction that halves lead-to-member conversion raises CAC by 80%. Cheap leads are expensive.
+    </div>
+    <div>
+      <h4>Quick wins vs strategic bets</h4>
+      <p class="small" style="margin-bottom:1mm;"><b>Quick wins (weeks):</b> proof consistency, remove placeholder copy, reminder sequence, five-minute lead SLA, creative refresh.</p>
+      <p class="small" style="margin:0;"><b>Strategic bets (quarters):</b> closed-loop measurement, segment journeys, predictive scoring, incrementality testing, sales capacity model.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="three-col">
+    <div class="card">
+      <h4>Marketing owns</h4>
+      <p class="tiny" style="margin:0;">Reach, registration, attendance, lead quality, creative, channel mix, cost per qualified conversation.</p>
+    </div>
+    <div class="card">
+      <h4>Sales owns</h4>
+      <p class="tiny" style="margin:0;">Speed to lead, booking, show rate, close rate, CRM hygiene, segment playbooks, capacity.</p>
+    </div>
+    <div class="card">
+      <h4>Data and finance own</h4>
+      <p class="tiny" style="margin:0;">Attribution, offline conversions, LTV, payback, contribution margin, reconciliation and incrementality.</p>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>Independent analysis · Public information only · October 2026</span><span class="footer-right"></span></div>
+</section>
+
+<!-- ============================== 8. NORTH STAR ============================== -->
+<section class="page">
+  <div class="page-header"><span><strong>Freedom Property Investors</strong> · Marketing &amp; conversion analysis</span><span>North Star</span></div>
+
+  <div class="kicker">06 · The North Star</div>
+  <h2>Incremental New Members at Target CAC.</h2>
+  <p class="lead">A North Star should do three things: align marketing, sales and finance; resist gaming; and connect daily work to economic value. Lead volume fails all three. Platform ROAS fails the second and third.</p>
+
+  <div class="north-star-node">
+    <div class="kicker">Recommended company North Star</div>
+    <h3>Incremental New Members at Target CAC (INM)</h3>
+    <p>Net new paying members in the period, attributable to incremental marketing activity, where fully loaded CAC is at or below the ceiling implied by lifetime value and payback.</p>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h3>Why this one</h3>
+      <ul class="small">
+        <li><b>It counts what pays.</b> Members are the first revenue event, not registrations or clicks.</li>
+        <li><b>It demands causality.</b> “Incremental” forces holdouts or lift tests, so brand and retargeting cannot simply take credit for demand that already existed.</li>
+        <li><b>It protects economics.</b> A member acquired above the CAC ceiling is growth that destroys value, so it does not count.</li>
+        <li><b>It connects functions.</b> Marketing creates the member, sales closes the member, finance defines the value, data proves the causality.</li>
+      </ul>
+
+      <h3>Options considered — and rejected</h3>
+      <table class="data-table">
+        <thead><tr><th>Metric</th><th>Why not the North Star</th></tr></thead>
+        <tbody>
+          <tr><td class="label">Leads / registrations</td><td>Easy to grow, easy to game, silent on quality and revenue.</td></tr>
+          <tr><td class="label">CPL</td><td>Cheap leads can be the most expensive members.</td></tr>
+          <tr><td class="label">Platform ROAS</td><td>Attribution-biased, not incremental, ignores payback and retention.</td></tr>
+          <tr><td class="label">CAC alone</td><td>Can be improved by shrinking spend and starving growth.</td></tr>
+          <tr><td class="label">Members alone</td><td>Can be bought at any price; no economic discipline.</td></tr>
+          <tr><td class="label">Member Lifetime Contribution</td><td>The right long-term finance North Star, but too slow for weekly marketing operation.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <div class="card">
+        <h3 style="font-size:10.8pt;">The CAC ceiling</h3>
+        <p class="small" style="margin-bottom:2mm;">Set the maximum fully loaded CAC from contribution, not revenue:</p>
+        <p class="mono" style="font-size:7.8pt; line-height:1.5; background:#0B2545; color:#FFFFFF; padding:2.6mm 3mm; border-radius:1.4mm; margin-bottom:2.4mm;">CAC ceiling = (First-year contribution × LTV multiple) ÷ Target LTV:CAC</p>
+        <table class="data-table" style="font-size:7.6pt;">
+          <thead><tr><th>First-year contribution</th><th>LTV multiple</th><th>Target LTV:CAC</th><th>Max CAC</th></tr></thead>
+          <tbody>
+            <tr><td>$8,000</td><td>2.0x</td><td>4:1</td><td>$4,000</td></tr>
+            <tr><td>$12,000</td><td>2.0x</td><td>4:1</td><td>$6,000</td></tr>
+            <tr><td>$20,000</td><td>2.0x</td><td>4:1</td><td>$10,000</td></tr>
+            <tr><td>$12,000</td><td>2.5x</td><td>4:1</td><td>$7,500</td></tr>
+            <tr><td>$12,000</td><td>3.0x</td><td>5:1</td><td>$7,200</td></tr>
+          </tbody>
+        </table>
+        <p class="tiny" style="margin:2mm 0 0;">Illustrative only. Use contribution margin after delivery, refunds and servicing — not gross revenue. Fully loaded CAC includes media, sales, marketing operations and content.</p>
+      </div>
+
+      <div class="avoid" style="margin-top:3mm;">
+        <strong>Guardrails, not afterthoughts.</strong>
+        <p class="small" style="margin:1.4mm 0 0;">Count a member toward INM only if: fully loaded CAC ≤ ceiling; the member is retained for 90 days and not refunded; and the acquisition is supported by incremental evidence (holdout, lift test or a credible attribution model).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>Independent analysis · Public information only · October 2026</span><span class="footer-right"></span></div>
+</section>
+
+<!-- ============================== 9. KPI TREE ============================== -->
+<section class="page">
+  <div class="page-header"><span><strong>Freedom Property Investors</strong> · Marketing &amp; conversion analysis</span><span>KPI tree &amp; cadence</span></div>
+
+  <div class="kicker">07 · The operating model</div>
+  <h2>From the North Star to the weekly review.</h2>
+  <p class="lead">The North Star is a decision tool, not a wall poster. It only works if it decomposes into metrics that channel owners, lifecycle marketers, sales leaders and finance can each move.</p>
+
+  <div class="tree-grid">
+    <div class="tree-branch">
+      <h4>Demand</h4>
+      <ul>
+        <li>Qualified reach</li>
+        <li>Impressions &amp; frequency</li>
+        <li>CTR / hook rate</li>
+        <li>Landing-page conversion</li>
+        <li>Masterclass registrations</li>
+        <li>Cost per registration</li>
+      </ul>
+    </div>
+    <div class="tree-branch">
+      <h4>Conversion</h4>
+      <ul>
+        <li>Attendance rate</li>
+        <li>MQL rate</li>
+        <li>Consultations booked</li>
+        <li>Show rate</li>
+        <li>Close rate</li>
+        <li>Lead-to-member</li>
+      </ul>
+    </div>
+    <div class="tree-branch">
+      <h4>Economics</h4>
+      <ul>
+        <li>Fully loaded CAC</li>
+        <li>LTV:CAC</li>
+        <li>CAC payback</li>
+        <li>MER</li>
+        <li>Contribution margin</li>
+        <li>Refund / retention</li>
+      </ul>
+    </div>
+    <div class="tree-branch">
+      <h4>Trust &amp; measurement</h4>
+      <ul>
+        <li>Offline match rate</li>
+        <li>Incremental ROAS</li>
+        <li>Attribution coverage</li>
+        <li>Speed to lead</li>
+        <li>Review freshness</li>
+        <li>Compliance exceptions</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-top:4mm;">
+    <div>
+      <h3>Recommended starting guardrails</h3>
+      <table class="data-table">
+        <thead><tr><th>Metric</th><th>Starting guardrail</th><th>Cadence</th></tr></thead>
+        <tbody>
+          <tr><td class="label">Masterclass attendance</td><td>≥ 55% including replay</td><td>Weekly</td></tr>
+          <tr><td class="label">Speed to lead</td><td>80% contacted under 5 minutes</td><td>Daily</td></tr>
+          <tr><td class="label">Lead-to-member</td><td>≥ 3%</td><td>Monthly</td></tr>
+          <tr><td class="label">Consultation show rate</td><td>≥ 70%</td><td>Weekly</td></tr>
+          <tr><td class="label">Offline match rate</td><td>≥ 80%</td><td>Monthly</td></tr>
+          <tr><td class="label">Incremental ROAS</td><td>≥ 2.0 on scale channels</td><td>Quarterly</td></tr>
+          <tr><td class="label">LTV:CAC</td><td>≥ 4:1</td><td>Monthly</td></tr>
+          <tr><td class="label">CAC payback</td><td>≤ 6 months</td><td>Monthly</td></tr>
+        </tbody>
+      </table>
+      <p class="tiny" style="margin-top:2mm;">Starting points for discussion, not universal benchmarks. Calibrate to the first clean cohort and revisit quarterly.</p>
+    </div>
+    <div>
+      <h3>Operating cadence</h3>
+      <div class="card" style="margin-bottom:2.4mm;">
+        <h4 style="color:#A47F2B;">Weekly · act</h4>
+        <p class="small" style="margin:0;">Spend pacing, CPM/CTR, registrations, attendance, MQLs, calls booked, show rate, speed to lead, creative fatigue. Owner: Head of Growth + channel owners.</p>
+      </div>
+      <div class="card" style="margin-bottom:2.4mm;">
+        <h4 style="color:#A47F2B;">Monthly · allocate</h4>
+        <p class="small" style="margin:0;">CAC by channel and segment, LTV:CAC, payback, lead-to-member, refunds, budget reallocation, sales capacity. Owner: Growth + Finance + Sales.</p>
+      </div>
+      <div class="card">
+        <h4 style="color:#A47F2B;">Quarterly · prove</h4>
+        <p class="small" style="margin:0;">Geo holdouts, conversion lift, cohort LTV, MMM, brand lift, compliance review, annual plan. Owner: Data + Growth + Finance.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col-even" style="margin-top:4mm;">
+    <div class="card">
+      <h4>Leading versus lagging</h4>
+      <p class="small" style="margin:0;"><b>Lead weekly:</b> registration, attendance, speed-to-lead, booking. <b>Lead monthly:</b> CAC, LTV:CAC, payback. <b>Prove quarterly:</b> incremental ROAS.</p>
+    </div>
+    <div class="card">
+      <h4>The 30-minute weekly review</h4>
+      <p class="small" style="margin:0;">1) North Star and guardrails. 2) Funnel variance by stage. 3) Creative and channel. 4) Sales capacity. 5) Decisions and owners.</p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:3.6mm;">
+    <strong>The test of the operating model.</strong> Every review should end with a decision, an owner and a date. Otherwise it is a reporting ritual, not a growth system.
+  </div>
+
+  <div class="page-footer"><span>Independent analysis · Public information only · October 2026</span><span class="footer-right"></span></div>
+</section>
+
+<!-- ============================== 10. MEASUREMENT + 90 DAYS ============================== -->
+<section class="page">
+  <div class="page-header"><span><strong>Freedom Property Investors</strong> · Marketing &amp; conversion analysis</span><span>Measurement &amp; 90-day plan</span></div>
+
+  <div class="kicker">08 · The measurement spine</div>
+  <h2>Build the measurement before you scale the spend.</h2>
+  <p class="lead">The platforms will always report a version of success. The business needs one reconciled view from ad click to member, with offline outcomes fed back to the platforms that created them.</p>
+
+  <div class="flow">
+    <div class="flow-step">Ad platforms<span>Meta · Google · YouTube</span></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Landing pages<span>GA4 · UTMs · consent</span></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">HubSpot<span>Lead lifecycle · masterclass</span></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Sales &amp; calls<span>Booked · held · closed</span></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Finance<span>Revenue · refunds · LTV</span></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Warehouse<span>Dashboard · cohorts</span></div>
+  </div>
+  <div class="callout" style="margin-top:0;">
+    <strong>Close the loop.</strong> Send member and refund events back to Meta (Conversions API) and Google (enhanced conversions) as offline conversions. Without this, the platforms optimise to form fills and the business optimises to the wrong number.
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h3>Minimum viable stack</h3>
+      <ul class="small">
+        <li>Server-side Google Tag Manager and consent-safe tracking.</li>
+        <li>One UTM taxonomy and a channel-mapping dictionary.</li>
+        <li>HubSpot lifecycle stages: lead → MQL → consultation booked → held → member → retained/refunded.</li>
+        <li>Call tracking with dispositions, not just duration.</li>
+        <li>Offline conversion uploads and a monthly match-rate check.</li>
+        <li>Cohort LTV and CAC payback by channel and segment.</li>
+        <li>Quarterly geo holdouts or conversion-lift tests; MMM only after clean data.</li>
+        <li>Data-quality tests and a monthly reconciliation to finance.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>90-day sequence</h3>
+      <div class="card" style="margin-bottom:2.2mm; padding:3mm 3.2mm;">
+        <h4 style="color:#A47F2B; font-size:9pt;">Days 1–30</h4>
+        <p class="small" style="margin:0 0 1.2mm;">Tracking audit; define MQL and member; CAPI and enhanced conversions; site trust fixes; masterclass reminder/replay; five-minute SLA.</p>
+        <p class="tiny" style="margin:0;"><b>Proof:</b> member events visible in platforms; attendance and speed-to-lead baselines.</p>
+      </div>
+      <div class="card" style="margin-bottom:2.2mm; padding:3mm 3.2mm;">
+        <h4 style="color:#A47F2B; font-size:9pt;">Days 31–60</h4>
+        <p class="small" style="margin:0 0 1.2mm;">Segment-specific journeys; creative sprint; reallocate toward efficient channels; lead-scoring v1; weekly dashboard.</p>
+        <p class="tiny" style="margin:0;"><b>Proof:</b> CAC by segment; creative winners; lead-quality lift.</p>
+      </div>
+      <div class="card" style="padding:3mm 3.2mm;">
+        <h4 style="color:#A47F2B; font-size:9pt;">Days 61–90</h4>
+        <p class="small" style="margin:0 0 1.2mm;">First geo holdout; cohort LTV; sales capacity model; quarterly planning; compliance review.</p>
+        <p class="tiny" style="margin:0;"><b>Proof:</b> incremental ROAS; payback by cohort; defensible budget decision.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="three-col">
+    <div class="card">
+      <h4>What to stop</h4>
+      <p class="tiny" style="margin:0;">Reporting lead volume without quality. Optimising to CPL. Letting platform ROAS set budget. Scaling spend without sales capacity. Running “#1” and performance claims without a substantiation file.</p>
+    </div>
+    <div class="card">
+      <h4>What to start</h4>
+      <p class="tiny" style="margin:0;">Offline conversion feedback. Weekly funnel review. Segment-level CAC and LTV. Creative refresh cadence. Quarterly incrementality. A single source of truth for proof.</p>
+    </div>
+    <div class="card">
+      <h4>What to prove</h4>
+      <p class="tiny" style="margin:0;">That paid media creates incremental members, not just incremental clicks. That the masterclass creates pipeline, not just registrations. That higher spend still clears the CAC ceiling.</p>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>Independent analysis · Public information only · October 2026</span><span class="footer-right"></span></div>
+</section>
+
+<!-- ============================== 11. RECOMMENDATIONS ============================== -->
+<section class="page">
+  <div class="page-header"><span><strong>Freedom Property Investors</strong> · Marketing &amp; conversion analysis</span><span>Recommendations</span></div>
+
+  <div class="kicker">09 · What I would do next</div>
+  <h2>Ten moves, in priority order.</h2>
+  <p class="lead">These are ordered by dependency and impact. Measurement comes first because every later decision depends on it; trust comes second because it taxes every acquisition dollar.</p>
+
+  <div class="rec-list">
+    <div class="rec"><div class="n">1</div><div><h4>Make the member the unit of measurement</h4><p>Move reporting from leads to members, and from platform ROAS to fully loaded CAC and payback.</p></div></div>
+    <div class="rec"><div class="n">2</div><div><h4>Close the offline loop</h4><p>Push member and refund events back to Meta and Google so media optimises to the right event.</p></div></div>
+    <div class="rec"><div class="n">3</div><div><h4>Set a CAC ceiling from LTV</h4><p>Derive the maximum fully loaded CAC from contribution margin, LTV multiple and target LTV:CAC.</p></div></div>
+    <div class="rec"><div class="n">4</div><div><h4>Treat the masterclass as a product</h4><p>Manage registration, reminders, attendance, replay and booking as separate conversion problems.</p></div></div>
+    <div class="rec"><div class="n">5</div><div><h4>Fix proof and trust inconsistencies</h4><p>One verified review count, no Lorem Ipsum, one hero promise, and a substantiation file for every claim.</p></div></div>
+    <div class="rec"><div class="n">6</div><div><h4>Build a creative factory, not a campaign</h4><p>Founder-led authority, data explainers, member stories and expert voices, refreshed on a cadence.</p></div></div>
+    <div class="rec"><div class="n">7</div><div><h4>Segment the funnel and the scorecard</h4><p>Different offers, proof, nurture and sales playbooks for first-time, experienced and retiree investors.</p></div></div>
+    <div class="rec"><div class="n">8</div><div><h4>Make speed-to-lead non-negotiable</h4><p>A five-minute SLA, round-robin routing, instant booking and escalation alerts.</p></div></div>
+    <div class="rec"><div class="n">9</div><div><h4>Align sales capacity with media spend</h4><p>Model consultations per week and closers required. Scaling past capacity turns budget into no-shows.</p></div></div>
+    <div class="rec"><div class="n">10</div><div><h4>Diversify beyond paid social</h4><p>Search captures intent; partnerships, referrals, reviews and organic content lower blended CAC.</p></div></div>
+  </div>
+
+  <div class="avoid" style="margin-top:3.4mm;">
+    <strong>What I would not do.</strong>
+    <p class="small" style="margin:1.2mm 0 0;">Scale on platform ROAS. Judge YouTube on last-click CAC. Optimise to CPL. Buy leads without sales capacity. Repeat unsubstantiated claims. Build MMM before the CRM data is clean.</p>
+  </div>
+
+  <div class="three-col" style="margin-top:3.2mm;">
+    <div class="card"><h4>Measurement</h4><p class="tiny" style="margin:0;">Member events in platforms; match rate ≥80%; one reconciled CAC.</p></div>
+    <div class="card"><h4>Conversion</h4><p class="tiny" style="margin:0;">Attendance ≥55%; 80% of leads contacted in 5 minutes; lead-to-member ≥3%.</p></div>
+    <div class="card"><h4>Economics</h4><p class="tiny" style="margin:0;">Blended CAC -8% to -12%; payback ≤6 months; first incremental read.</p></div>
+  </div>
+
+  <div class="dark-box" style="margin-top:3.2mm;">
+    <div class="kicker">The bottom line</div>
+    <p style="margin:0; font-size:10.2pt; line-height:1.4;">Freedom already has the hard part: a differentiated offer, credible expertise and a market that wants the outcome. The next stage is not more attention — it is <b style="color:#E8CF92;">better conversion of the attention it earns</b>, and the measurement to prove which attention creates members.</p>
+  </div>
+
+  <div class="page-footer"><span>Independent analysis · Public information only · October 2026</span><span class="footer-right"></span></div>
+</section>
+
+<!-- ============================== 12. APPENDIX ============================== -->
+<section class="page">
+  <div class="page-header"><span><strong>Freedom Property Investors</strong> · Marketing &amp; conversion analysis</span><span>Appendix</span></div>
+
+  <div class="kicker">Appendix</div>
+  <h2>Sources, assumptions and limitations.</h2>
+
+  <div class="two-col">
+    <div>
+      <h3>Public sources reviewed</h3>
+      <ul class="source-list">
+        <li>Freedom Property Investors homepage — positioning, proof assets, methodology, services, success stories and reviews. <span class="mono">freedompropertyinvestors.com.au</span></li>
+        <li>“How We Help First Time Investors” — target segment, free resources and proof. <span class="mono">/services/first-time-investor</span></li>
+        <li>Contact page — offices, phone, email and “Register for FREE NOW” call to action. <span class="mono">/contact</span></li>
+        <li>“The 2026 Boom Locations” masterclass page — offer, four promises, live expert format and registration CTA. <span class="mono">/masterclass-boom-locations</span></li>
+        <li>“Pay Off Your Mortgage in 7 Years” masterclass page — offer and registration CTA. <span class="mono">/masterclass-pay-off-your-mortgage</span></li>
+        <li>Public Australian media and awards references as displayed on the site (Today Show, AFR, Domain, REA, Nine, Sky News).</li>
+      </ul>
+      <p class="tiny">Reviewed 26 October 2026. Public pages change; figures and claims should be re-checked before use.</p>
+
+      <h3>Analytical assumptions</h3>
+      <ul class="source-list">
+        <li>Membership pricing, revenue mix, CAC, conversion rates, retention and sales cost are not public. Any numbers in this document are illustrative models, not company results.</li>
+        <li>The funnel order and revenue streams are inferred from the public customer journey, service descriptions and brand assets.</li>
+        <li>“Fully loaded CAC” includes media, sales, marketing operations, content and tools. “Media CAC” is media-only and understates the true cost.</li>
+        <li>LTV should be contribution-based, after delivery, refunds and servicing. The CAC ceiling examples use contribution before those adjustments and are therefore optimistic.</li>
+        <li>Incremental ROAS requires a holdout, lift test or credible causal model. Platform-reported ROAS is not incremental ROAS.</li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="card" style="margin-bottom:3mm;">
+        <h3 style="font-size:10.8pt;">Glossary</h3>
+        <p class="small" style="margin-bottom:1.2mm;"><b>CAC:</b> cost to acquire one paying member, fully loaded.</p>
+        <p class="small" style="margin-bottom:1.2mm;"><b>LTV:</b> contribution expected from a member over the relationship.</p>
+        <p class="small" style="margin-bottom:1.2mm;"><b>MER:</b> revenue per dollar of total media spend.</p>
+        <p class="small" style="margin-bottom:1.2mm;"><b>iROAS:</b> incremental revenue divided by spend, measured against a holdout.</p>
+        <p class="small" style="margin-bottom:1.2mm;"><b>MQL:</b> a lead that meets the agreed fit and intent criteria.</p>
+        <p class="small" style="margin-bottom:1.2mm;"><b>Offline conversion:</b> a CRM event (member, refund) sent back to an ad platform.</p>
+        <p class="small" style="margin:0;"><b>Geo holdout:</b> withholding spend in matched regions to measure incremental effect.</p>
+      </div>
+
+      <div class="avoid">
+        <strong>Scope and disclaimer.</strong>
+        <p class="small" style="margin:1.2mm 0 0;">This is an independent marketing and paid-media analysis based on publicly available information. It is not financial, investment, legal or tax advice, and it is not affiliated with or endorsed by Freedom Property Investors. Any regulatory or compliance observations require review by qualified Australian legal and compliance advisers.</p>
+      </div>
+
+      <div class="card" style="margin-top:3mm;">
+        <h3 style="font-size:10.8pt;">What would change this view</h3>
+        <ul class="small" style="margin-bottom:0;">
+          <li>Observed cohort LTV materially below the assumption.</li>
+          <li>High refund or early-churn rates.</li>
+          <li>Sales capacity or property supply as the binding constraint.</li>
+          <li>A property-market or credit cycle that changes buyer urgency.</li>
+          <li>Platform policy or regulatory changes that restrict targeting or claims.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="four-col">
+    <div class="stat"><div class="value">1</div><div class="label">North Star</div></div>
+    <div class="stat"><div class="value">3</div><div class="label">Guardrails</div></div>
+    <div class="stat"><div class="value">8</div><div class="label">Conversion leaks mapped</div></div>
+    <div class="stat"><div class="value">90</div><div class="label">Days to a clean baseline</div></div>
+  </div>
+
+  <p class="footnote" style="margin-top:3mm;">Prepared as a paid media and marketing analytics review. For internal discussion. All third-party names and trademarks belong to their respective owners.</p>
+
+  <div class="page-footer"><span>Independent analysis · Public information only · October 2026</span><span class="footer-right"></span></div>
+</section>
+
+</body>
+</html>

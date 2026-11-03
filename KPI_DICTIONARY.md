@@ -1,0 +1,73 @@
+# KPI Data Dictionary
+
+This dictionary defines the metrics used in the sample marketing dashboard for
+Freedom Property Investors. It exists to make one thing explicit: **every KPI has
+a job, a formula, an owner and a guardrail.** A metric without those four things
+is trivia.
+
+## Measurement framework
+
+The dashboard is deliberately layered.
+
+1. **Business outcomes** - spend, revenue, CAC, MER, LTV:CAC and payback. These
+   decide whether growth is economically viable.
+2. **Funnel diagnostics** - CPM, CTR, landing-page rate, CPL, attendance, MQL,
+   call and show rates. These explain *why* an outcome moved.
+3. **Measurement integrity** - offline match rate, incremental ROAS, lead quality
+   score and pacing. These keep the first two layers honest.
+
+## The dictionary
+
+| Stage | KPI | Definition | Formula | Why it matters | Source / owner | Target / guardrail |
+|---|---|---|---|---|---|---|
+| Business & unit economics | Marketing spend | Total media investment in the selected period, excluding agency fees and production. | SUM(spend) | The denominator for every efficiency ratio. Without a clean spend number, CAC, ROAS and MER cannot be compared across channels or periods. | Ad platforms reconciled to finance; Marketing Ops | Paced to plan within +/-5% |
+| Business & unit economics | Attributed revenue | Year-one membership revenue attributed to the paid channel of first touch. | SUM(members x segment AOV) | Connects media activity to the only outcome that matters. Should be reconciled to CRM and finance, not ad-platform revenue. | HubSpot deals + finance; Marketing Ops | Reconcile to CRM within 3% |
+| Business & unit economics | Blended CAC | Average media cost to acquire one paying member across all paid channels. | Total spend / total members | The headline viability metric. Rising blended CAC with flat AOV means the growth engine is degrading, even if lead volume is up. | Fact table; Head of Growth | <= $2,200 sample guardrail |
+| Business & unit economics | MER (marketing efficiency ratio) | Revenue generated per dollar of total media spend, including channels that receive no last-click credit. | Total attributed revenue / total spend | A robust, attribution-light efficiency check. Harder to game than platform ROAS and useful for board-level reporting. | Fact table; Finance | >= 4.0 |
+| Business & unit economics | ROAS | Attributed revenue divided by spend for a channel or campaign. | Revenue / spend | Useful for relative channel comparison and creative triage, but it is not incremental and should never be the sole budget authority. | Ad platforms + CRM; channel owners | >= 4.0 blended; channel-specific floors |
+| Business & unit economics | LTV | Expected lifetime gross revenue from a member, modelled from observed cohorts. | First-year AOV x LTV multiple (2.2x sample) | High-ticket businesses can rationally pay more than first-year revenue for a member. Using LTV rather than AOV prevents under-investing in quality channels. | Finance + CRM cohorts; Data | >= 2.2x first-year revenue |
+| Business & unit economics | LTV:CAC | Lifetime value per member relative to the cost of acquiring one. | LTV / CAC | The core unit-economics test. Below roughly 3:1 the business cannot fund growth, overheads and margin comfortably; above 5:1 it may be under-investing. | Derived; Head of Growth + Finance | >= 4:1 |
+| Business & unit economics | CAC payback | Months of revenue needed to recover the cost of acquiring a member. | CAC / (first-year AOV / 12) | Cash-flow guardrail. Even with strong LTV, slow payback constrains how fast the business can scale spend. | Derived; Finance | <= 6 months |
+| Reach & traffic | Impressions | Number of ad impressions served. | SUM(impressions) | Top-of-funnel volume and the denominator for CPM and CTR. Falling impressions at rising spend signals auction pressure or audience saturation. | Ad platforms; channel owners | Monitor vs spend; no hard target |
+| Reach & traffic | CPM | Cost per 1,000 impressions. | Spend / impressions x 1,000 | Measures the cost of attention. A rising CPM alongside falling CTR is the classic creative-fatigue and audience-saturation signature. | Ad platforms; channel owners | Meta CPM increase <= 10% QoQ |
+| Reach & traffic | CTR | Clicks divided by impressions. | Clicks / impressions | The first test of message-market fit. CTR declines are an early warning that creative or audience is tiring before CAC visibly moves. | Ad platforms; creative lead | Meta >=1.2%; Search >=3.5% |
+| Reach & traffic | CPC | Average cost per click. | Spend / clicks | Combines auction cost and creative resonance. Useful for diagnosing whether a CAC increase comes from media costs or landing-page conversion. | Ad platforms; channel owners | Monitor; alert on +20% week on week |
+| Website & lead funnel | Landing page view rate | Share of ad clicks that successfully load the landing page. | Sessions / clicks | Detects broken links, slow pages and tracking loss. A drop here wastes paid clicks before the funnel even starts. | GA4 + ad platforms; Web team | >= 90% |
+| Website & lead funnel | Masterclass registration rate | Share of landing-page sessions that register for a masterclass or equivalent lead offer. | Masterclass registrations / sessions | Measures landing-page and offer conversion. It is the lever that changes CPL without changing media buying. | HubSpot + GA4; CRO lead | >= 4% |
+| Website & lead funnel | Cost per lead (CPL) | Media cost per masterclass registration or gated-asset lead. | Spend / masterclass registrations | The first purchasable unit of the funnel. Must always be read with lead quality: cheap leads that never book calls destroy value. | Ad platforms + HubSpot; channel owners | <= $60 sample guardrail |
+| Website & lead funnel | Masterclass attendance rate | Share of registrants who attend live or consume the replay within the attribution window. | Attended / registrations | The largest controllable leak in a webinar-led model. Registration without attendance produces no sales conversations and inflates apparent CPL. | Webinar platform + HubSpot; Lifecycle | >= 55% including replay |
+| Sales qualification | MQL rate | Share of attendees who meet the qualified-lead definition (budget, intent, location, investable capacity). | MQLs / attendees | Separates education-hungry traffic from prospects the sales team can actually serve. Low MQL rate means the promise and the qualification criteria are misaligned. | HubSpot lifecycle stages; Sales Ops | >= 65% of attendees |
+| Sales qualification | Cost per MQL | Media cost per marketing-qualified lead. | Spend / MQLs | A better optimisation target than CPL because it rewards lead quality rather than raw volume. | Ad platforms + HubSpot; channel owners | <= $120 |
+| Sales qualification | Call booking rate | Share of MQLs that book a strategy call. | Calls booked / MQLs | Measures the handoff from marketing to sales and the strength of the call offer. A weak booking rate is usually a follow-up speed and messaging problem, not a media problem. | HubSpot + call booking tool; Sales | >= 40% |
+| Sales qualification | Cost per booked call | Media cost per strategy call booked. | Spend / calls booked | The most actionable mid-funnel efficiency metric. Lets marketing be judged on conversations created rather than forms completed. | Ad platforms + CRM; Head of Growth | <= $300 |
+| Sales qualification | Call show rate | Share of booked calls where the prospect attends. | Calls held / calls booked | No-shows are pure wasted acquisition cost. Reminder sequences and qualification reduce cost per member without touching media. | Call booking tool + CRM; Sales | >= 70% |
+| Sales qualification | Lead-to-member conversion | Share of masterclass leads that become paying members. | Members / masterclass registrations | The end-to-end quality check. It prevents celebrating cheap leads that never convert and exposes segment-specific nurture gaps. | CRM; Sales + Lifecycle | >= 3.0% |
+| Sales qualification | Call-to-member conversion | Share of held calls that close into membership. | Members / calls held | Primarily a sales-quality and offer-fit metric. Falling close rates on stable call volume points to lead quality or sales enablement issues. | CRM; Sales leadership | >= 15% |
+| Sales qualification | Segment CAC and conversion | CAC, lead-to-member rate and AOV broken out by first-time investor, experienced investor and retiree. | Segment spend / segment members; segment members / segment leads | Blended averages hide cross-subsidy. A segment can look acceptable in total while quietly destroying value or being starved of budget. | CRM + fact table; Data | Each segment LTV:CAC >= 3:1 |
+| Sales qualification | Average days to convert | Mean elapsed days between first lead touch and membership close. | AVG(member close date - first touch date) | Sets the correct evaluation window for campaigns. Judging long-cycle channels on 7-day ROAS systematically kills the channels that create the best members. | CRM cohort analysis; Data | Use p90 as the attribution window |
+| Speed to lead | Lead response time | Time from lead creation to first attempted human contact, reported in buckets. | First contact timestamp - lead created timestamp | One of the highest-leverage variables in high-ticket lead gen. Fast response materially increases booking and show rates at zero media cost. | CRM / call platform; Sales Ops | 80% of leads contacted under 5 minutes |
+| Creative performance | Hook rate (3-second view rate) | Share of video impressions that hold for at least three seconds. | 3-second video views / video impressions | Diagnoses the opening frame. Weak hook rate means the ad never earns attention, regardless of how good the offer is. | Meta / YouTube; Creative lead | >= 25% |
+| Creative performance | VSL / masterclass completion | Share of viewers who reach the key offer or completion point. | Completion events / video plays | Measures whether the long-form asset actually sells. Retention curves show exactly where prospects drop out and what to re-cut. | Video platform + GA4; Creative lead | >= 25% to offer point |
+| Creative performance | Creative fatigue | Change in CTR and CPM over a rolling 14-day window at stable frequency. | (CTR_today / CTR_14d_ago) - 1; frequency trend | Caught early, fatigue can be fixed by rotation; caught late, it shows up as an unexplained CAC increase and wasted spend. | Ad platforms; Creative lead | CTR decline <15%; frequency <3.5 |
+| Measurement & attribution | Incremental ROAS (iROAS) | Revenue caused by the campaign, measured against a holdout or lift test, divided by spend. | Incremental revenue / spend | The only way to know whether paid media creates revenue or takes credit for demand that would have converted anyway. Essential for brand and retargeting. | Geo holdouts / conversion lift; Data | >= 2.0 for scale channels |
+| Measurement & attribution | Offline conversion match rate | Share of CRM member events successfully matched back to ad-platform identities. | Matched offline conversions / total offline conversions | If match rates are low, platforms optimise on incomplete signals and CAC reporting is wrong. This is the health check for the measurement foundation. | Meta CAPI / Google enhanced conversions; Marketing Ops | >= 80% |
+| Measurement & attribution | Lead quality score | Model-predicted probability that a lead becomes a member, plus top-decile vs bottom-decile conversion. | Model score (AUC); top-decile conversion / average conversion | Lets sales prioritise the right leads and lets ad platforms optimise toward likely members rather than cheap form fills. | CRM + data warehouse; Data | AUC >= 0.75; top decile >= 3x average |
+| Measurement & attribution | Budget pacing | Actual spend versus planned spend for the period. | (Actual spend / planned spend) - 1 | Prevents end-of-month panic spending and protects learning phases. Pacing variance also confounds week-on-week CAC comparisons. | Ad platforms + finance; Marketing Ops | +/-5% of plan |
+
+## How to use it
+
+- Review **business outcomes** monthly with finance and the Head of Growth.
+- Review **funnel diagnostics** weekly with channel owners, sales operations and
+  lifecycle marketing.
+- Treat **measurement integrity** as a release gate: if offline match rate or
+  incrementality is not credible, do not move budget on last-click ROAS.
+- When a metric has no owner, it will not be maintained. Assign one before
+  productionising the dashboard.
+
+## Assumptions
+
+- **Synthetic data.** Every number in this dashboard is generated for demonstration. It is calibrated to Freedom Property Investors' public positioning (masterclass-led, high-ticket advisory, three investor segments) but is not actual company data.
+- **Membership value.** First-time investor $7,800; experienced investor $12,000; retiree $9,500. Blended value in the sample is roughly $9,600 per member in year one.
+- **Lifetime value.** LTV is modelled at 2.2x first-year membership revenue over three years, allowing for renewals, upsells and referrals. Replace with observed cohort LTV before using LTV:CAC for real budget decisions.
+- **Attribution.** Members are attributed to the paid channel of first touch. Real attribution should combine first touch, last touch and incrementality tests. Platform ROAS is not incremental ROAS.
+- **Currency and period.** All figures are AUD over the 26 weeks from 27 April to 25 October 2026.

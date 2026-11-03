@@ -31,62 +31,430 @@ from data import END, SEGMENTS, START, load_data
 
 st.set_page_config(
     page_title="FPI Marketing Analytics (Sample)",
-    page_icon="",
+    page_icon="📈",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="auto",
 )
 
-NAVY = "#0B2545"
-GOLD = "#C8A24A"
-BLUE = "#2E6F95"
-GREEN = "#1B7F5A"
-RED = "#B23A3A"
-SLATE = "#7A8B99"
-GRID = "#E6E9EE"
+ACCENT = "#cff45a"
+ACCENT_BRIGHT = "#e0ff8f"
+COOL = "#809bff"
+AMBER = "#ffb86b"
+CORAL = "#ff7a90"
+TEAL = "#5eead4"
+SLATE = "#9aa0ad"
+GRID = "rgba(238,237,232,0.07)"
 LTV_MULT = 2.2
-PALETTE = [NAVY, GOLD, BLUE, GREEN, RED, SLATE]
+
+# Legacy names kept so the existing chart calls keep working; the values now
+# follow the alvintola.com palette.
+NAVY = ACCENT
+GOLD = AMBER
+BLUE = COOL
+GREEN = TEAL
+RED = CORAL
+PALETTE = [ACCENT, COOL, AMBER, CORAL, TEAL, SLATE]
 
 CHANNEL_COLORS = {
-    "Meta Prospecting": NAVY,
-    "Meta Retargeting": GOLD,
-    "YouTube In-Stream": RED,
-    "Google Search": BLUE,
-    "Google Demand Gen": GREEN,
+    "Meta Prospecting": ACCENT,
+    "Meta Retargeting": AMBER,
+    "YouTube In-Stream": CORAL,
+    "Google Search": COOL,
+    "Google Demand Gen": TEAL,
 }
 SEGMENT_COLORS = {
-    "First-time investor": BLUE,
-    "Experienced investor": NAVY,
-    "Retiree": GOLD,
+    "First-time investor": COOL,
+    "Experienced investor": ACCENT,
+    "Retiree": AMBER,
 }
 
 CSS = """
 <style>
-    .block-container {padding-top: 1.4rem; padding-bottom: 2rem; max-width: 1500px;}
-    div[data-testid="stMetric"] {
-        background: #FFFFFF;
-        border: 1px solid #E6E9EE;
-        border-radius: 12px;
-        padding: 14px 16px;
-        box-shadow: 0 1px 2px rgba(11,37,69,0.04);
+    @font-face {
+        font-family: "Inter";
+        src: url("/app/static/fonts/inter.woff2") format("woff2");
+        font-weight: 400 700;
+        font-style: normal;
+        font-display: swap;
     }
-    div[data-testid="stMetricLabel"] p {font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase; color: #5B6B7C;}
-    div[data-testid="stMetricValue"] {font-size: 1.65rem; color: #0B2545; font-weight: 700;}
+    @font-face {
+        font-family: "Fraunces";
+        src: url("/app/static/fonts/fraunces.woff2") format("woff2");
+        font-weight: 300 600;
+        font-style: normal;
+        font-display: swap;
+    }
+    @font-face {
+        font-family: "Fraunces";
+        src: url("/app/static/fonts/fraunces-italic.woff2") format("woff2");
+        font-weight: 300 600;
+        font-style: italic;
+        font-display: swap;
+    }
+    @font-face {
+        font-family: "JetBrains Mono";
+        src: url("/app/static/fonts/jetbrains-mono.woff2") format("woff2");
+        font-weight: 400 600;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    :root {
+        --bg: #0a0b0e;
+        --panel: #101218;
+        --panel-2: #161a22;
+        --line: rgba(238, 237, 232, 0.09);
+        --line-strong: rgba(238, 237, 232, 0.17);
+        --text: #f2f0e9;
+        --muted: #9aa0ad;
+        --muted-strong: #bdc2cc;
+        --accent: #cff45a;
+        --accent-bright: #e0ff8f;
+        --accent-soft: rgba(207, 244, 90, 0.12);
+        --cool: #809bff;
+        --serif: "Fraunces", Georgia, serif;
+        --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", "SFMono-Regular", Menlo, monospace;
+    }
+
+    html, body, [data-testid="stAppViewContainer"] {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--sans);
+    }
+    [data-testid="stAppViewContainer"] {
+        background:
+            radial-gradient(ellipse 70% 48% at 78% -10%, rgba(207, 244, 90, 0.075), transparent 62%),
+            radial-gradient(ellipse 58% 44% at 4% 38%, rgba(128, 155, 255, 0.055), transparent 66%),
+            var(--bg);
+    }
+    [data-testid="stHeader"] { background: transparent; }
+    #MainMenu, footer { visibility: hidden; }
+    .block-container { padding-top: 1.6rem; padding-bottom: 3rem; max-width: 1500px; }
+
+    h1, h2, h3, h4,
+    [data-testid="stMarkdownContainer"] h1,
+    [data-testid="stMarkdownContainer"] h2,
+    [data-testid="stMarkdownContainer"] h3,
+    [data-testid="stMarkdownContainer"] h4 {
+        font-family: var(--serif) !important;
+        font-weight: 400 !important;
+        letter-spacing: -0.015em;
+        color: var(--text);
+    }
+    h1 { font-size: clamp(1.7rem, 2.5vw, 2.2rem); }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.18rem; }
+    h4 { font-size: 1.02rem; }
+    p, li { color: var(--muted-strong); }
+    .stMarkdown strong { color: var(--text); }
+    [data-testid="stCaptionContainer"] p {
+        color: var(--muted) !important;
+        font-family: var(--mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.02em;
+    }
+    code { font-family: var(--mono); color: var(--accent); }
+    a { color: var(--accent); }
+    hr { border-color: var(--line) !important; }
+
+    /* Sidebar */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #0d0f14 0%, #0a0b0e 100%);
+        border-right: 1px solid var(--line);
+    }
+    [data-testid="stSidebarContent"] { padding-top: 1.3rem; }
+    [data-testid="stSidebarCollapsedControl"] { color: var(--text); }
+    .nav-label {
+        margin: 2px 0 9px;
+        font-family: var(--mono);
+        font-size: 0.58rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+    }
+    [data-testid="stRadioGroup"] {
+        counter-reset: nav;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+    }
+    [data-testid="stRadioGroup"] > div {
+        counter-increment: nav;
+        display: block;
+        width: 100%;
+    }
+    [data-testid="stRadioOption"] {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        padding: 9px 11px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgba(238, 237, 232, 0.015);
+        cursor: pointer;
+        transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+    }
+    [data-testid="stRadioOption"]::before {
+        content: "0" counter(nav);
+        flex: 0 0 auto;
+        padding: 3px 6px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: rgba(0, 0, 0, 0.22);
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 0.56rem;
+        letter-spacing: 0.06em;
+        transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+    [data-testid="stRadioOption"]::after {
+        content: "→";
+        margin-left: auto;
+        color: var(--muted);
+        font-size: 0.8rem;
+        opacity: 0;
+        transform: translateX(-4px);
+        transition: opacity 0.18s ease, transform 0.18s ease, color 0.18s ease;
+    }
+    [data-testid="stRadioOption"] > div > div:first-child { display: none; }
+    [data-testid="stRadioOption"] > div { flex: 1; min-width: 0; }
+    [data-testid="stRadioOption"] [data-testid="stMarkdownContainer"] { min-width: 0; }
+    [data-testid="stRadioOption"] p {
+        font-size: 0.8rem;
+        color: var(--muted-strong);
+        transition: color 0.18s ease;
+    }
+    [data-testid="stRadioOption"]:hover {
+        border-color: var(--line-strong);
+        background: rgba(238, 237, 232, 0.035);
+        transform: translateX(2px);
+    }
+    [data-testid="stRadioOption"]:hover p { color: var(--text); }
+    [data-testid="stRadioOption"]:hover::after { opacity: 0.6; transform: none; }
+    [data-testid="stRadioOption"][data-selected="true"] {
+        border-color: rgba(207, 244, 90, 0.42);
+        background: var(--accent-soft);
+        box-shadow: inset 3px 0 0 var(--accent), 0 0 0 1px rgba(207, 244, 90, 0.08);
+    }
+    [data-testid="stRadioOption"][data-selected="true"] p {
+        color: var(--accent);
+        font-weight: 600;
+    }
+    [data-testid="stRadioOption"][data-selected="true"]::before {
+        color: var(--accent);
+        border-color: rgba(207, 244, 90, 0.35);
+        background: rgba(207, 244, 90, 0.1);
+    }
+    [data-testid="stRadioOption"][data-selected="true"]::after {
+        opacity: 1;
+        transform: none;
+        color: var(--accent);
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; margin: 2px 0 18px; }
+    .brand-mark {
+        width: 38px; height: 38px; flex: 0 0 auto;
+        display: grid; place-items: center;
+        border-radius: 11px;
+        font-family: var(--mono); font-size: 0.66rem; font-weight: 600; letter-spacing: 0.08em;
+        color: #0a0b0e;
+        background: linear-gradient(135deg, var(--accent-bright), var(--accent));
+        box-shadow: 0 8px 22px rgba(207, 244, 90, 0.18);
+    }
+    .brand-name { font-family: var(--serif); font-size: 1.02rem; line-height: 1.15; color: var(--text); }
+    .brand-sub {
+        margin-top: 3px;
+        font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.11em;
+        text-transform: uppercase; color: var(--muted);
+    }
+    .filter-summary {
+        padding: 9px 11px;
+        border: 1px dashed var(--line-strong);
+        border-radius: 9px;
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        letter-spacing: 0.02em;
+        line-height: 1.5;
+    }
+
+    /* Hero */
     .hero {
-        background: linear-gradient(120deg, #0B2545 0%, #163A63 62%, #1E4A78 100%);
-        border-radius: 16px; padding: 26px 30px; color: #FFFFFF; margin-bottom: 18px;
-        border-left: 6px solid #C8A24A;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 20px;
+        padding: 26px 30px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: linear-gradient(135deg, rgba(22, 26, 34, 0.96), rgba(10, 11, 14, 0.98));
+        box-shadow: 0 22px 55px rgba(0, 0, 0, 0.3);
     }
-    .hero h1 {font-size: 1.85rem; margin: 0 0 6px 0; color: #FFFFFF; font-weight: 700;}
-    .hero p {margin: 0; color: #D7E0EA; font-size: 0.98rem; max-width: 980px;}
-    .hero .tag {display:inline-block; background:rgba(200,162,74,0.18); color:#E8CF92; border:1px solid rgba(200,162,74,0.45);
-        font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase; padding:3px 9px; border-radius:999px; margin-bottom:10px;}
-    .insight {background:#FFFFFF; border:1px solid #E6E9EE; border-top:3px solid #C8A24A; border-radius:12px; padding:16px 18px; height:100%;}
-    .insight .kicker {font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; color:#8A6D2E; font-weight:700; margin-bottom:6px;}
-    .insight .title {font-size:1.02rem; color:#0B2545; font-weight:700; margin-bottom:6px; line-height:1.25;}
-    .insight .body {font-size:0.86rem; color:#44556A; line-height:1.45;}
-    .section-note {background:#F7F8FA; border:1px solid #E6E9EE; border-radius:10px; padding:12px 14px; color:#44556A; font-size:0.86rem;}
-    h2, h3 {color:#0B2545;}
-    div[data-testid="stExpander"] {border:1px solid #E6E9EE; border-radius:10px;}
+    .hero::before {
+        content: "";
+        position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+        background: linear-gradient(180deg, var(--accent), transparent 82%);
+    }
+    .hero::after {
+        content: "";
+        position: absolute; top: -60%; right: -8%;
+        width: 440px; height: 440px;
+        background: radial-gradient(circle, rgba(207, 244, 90, 0.14), transparent 66%);
+        pointer-events: none;
+    }
+    .hero h1 {
+        position: relative;
+        margin: 0 0 8px;
+        font-family: var(--serif);
+        font-size: clamp(1.7rem, 2.5vw, 2.2rem);
+        color: var(--text);
+    }
+    .hero p { position: relative; margin: 0; max-width: 940px; color: var(--muted-strong); font-size: 0.96rem; }
+    .hero .tag {
+        position: relative;
+        display: inline-flex; align-items: center; gap: 6px;
+        margin-bottom: 12px; padding: 4px 9px;
+        border: 1px solid rgba(207, 244, 90, 0.35);
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase;
+    }
+
+    /* Metric cards */
+    div[data-testid="stMetric"] {
+        position: relative;
+        padding: 16px 18px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: linear-gradient(180deg, var(--panel), rgba(10, 11, 14, 0.92));
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+        transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+    div[data-testid="stMetric"]:hover { border-color: rgba(207, 244, 90, 0.3); transform: translateY(-1px); }
+    div[data-testid="stMetricLabel"] p {
+        font-family: var(--mono) !important;
+        font-size: 0.62rem !important;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted) !important;
+    }
+    div[data-testid="stMetricValue"] {
+        font-family: var(--serif) !important;
+        font-size: 1.6rem !important;
+        font-weight: 500 !important;
+        color: var(--text) !important;
+    }
+    div[data-testid="stMetricDelta"] { font-family: var(--mono); font-size: 0.64rem; }
+    div[data-testid="stMetricDelta"] svg { display: none; }
+
+    /* Insight + note cards */
+    .insight {
+        height: 100%;
+        padding: 16px 18px;
+        border: 1px solid var(--line);
+        border-top: 2px solid var(--accent);
+        border-radius: 14px;
+        background: linear-gradient(180deg, var(--panel), rgba(10, 11, 14, 0.92));
+    }
+    .insight .kicker {
+        margin-bottom: 7px;
+        font-family: var(--mono); font-size: 0.59rem; letter-spacing: 0.14em;
+        text-transform: uppercase; color: var(--accent); font-weight: 600;
+    }
+    .insight .title {
+        margin-bottom: 6px;
+        font-family: var(--serif); font-size: 1.05rem; font-weight: 500;
+        line-height: 1.25; color: var(--text);
+    }
+    .insight .body { font-size: 0.84rem; line-height: 1.5; color: var(--muted-strong); }
+    .section-note {
+        padding: 12px 14px;
+        border: 1px solid var(--line);
+        border-left: 2px solid var(--cool);
+        border-radius: 10px;
+        background: rgba(22, 26, 34, 0.7);
+        color: var(--muted-strong);
+        font-size: 0.84rem;
+    }
+
+    /* Expanders */
+    div[data-testid="stExpander"] {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: rgba(16, 18, 24, 0.55);
+        overflow: hidden;
+    }
+    div[data-testid="stExpander"] summary {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.04em;
+    }
+    div[data-testid="stExpander"] summary:hover { color: var(--accent); }
+    [data-testid="stSidebar"] div[data-testid="stExpander"] summary {
+        padding: 2px 0;
+        font-size: 0.66rem;
+        letter-spacing: 0.10em;
+        text-transform: uppercase;
+        color: var(--muted-strong);
+    }
+    [data-testid="stAppDeployButton"] { display: none !important; }
+
+    /* Buttons */
+    .stButton > button, .stDownloadButton > button {
+        border: 1px solid var(--line-strong);
+        border-radius: 999px;
+        background: transparent;
+        color: var(--text);
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 0.55rem 1.1rem;
+        transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+    .stButton > button:hover, .stDownloadButton > button:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        transform: translateY(-1px);
+    }
+
+    /* Inputs */
+    [data-baseweb="select"] > div,
+    [data-baseweb="input"] > div,
+    [data-testid="stDateInput"] [data-baseweb="input"] {
+        border-color: var(--line) !important;
+        border-radius: 9px !important;
+        background: var(--panel-2) !important;
+    }
+    [data-testid="stSidebar"] [data-baseweb="select"] > div,
+    [data-testid="stSidebar"] [data-baseweb="input"] > div {
+        background: rgba(238, 237, 232, 0.03) !important;
+    }
+    [data-baseweb="tag"] {
+        border-radius: 6px !important;
+        background: var(--accent-soft) !important;
+        color: var(--accent) !important;
+    }
+
+    /* Data + controls */
+    [data-testid="stDataFrame"] {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    [data-testid="stSlider"] [role="slider"] { box-shadow: 0 0 0 3px rgba(207, 244, 90, 0.18); }
+    [data-testid="stAlert"] { border: 1px solid var(--line); border-radius: 12px; }
+
+    /* Scrollbars + plotly chrome */
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #262b36; border: 2px solid var(--bg); border-radius: 8px; }
+    ::-webkit-scrollbar-thumb:hover { background: #343b49; }
+    .js-plotly-plot .plotly .modebar { opacity: 0.2; transition: opacity 0.2s ease; }
+    .js-plotly-plot:hover .plotly .modebar { opacity: 1; }
 </style>
 """
 st.markdown(CSS, unsafe_allow_html=True)
@@ -238,21 +606,48 @@ def channel_summary(df: pd.DataFrame) -> pd.DataFrame:
 
 def style_fig(fig, height: int = 360, title: str | None = None, legend: bool = True):
     fig.update_layout(
-        template="plotly_white",
+        template="plotly_dark",
         height=height,
-        margin=dict(l=10, r=10, t=45 if title else 20, b=10),
-        font=dict(family="Inter, Segoe UI, sans-serif", color=NAVY, size=12),
-        title=dict(text=title, font=dict(size=15, color=NAVY)) if title else None,
+        margin=dict(l=10, r=10, t=48 if title else 20, b=10),
+        font=dict(family="Inter, sans-serif", color="#bdc2cc", size=12),
+        title=dict(
+            text=title,
+            font=dict(size=15, color="#f2f0e9", family="Fraunces, Georgia, serif"),
+        )
+        if title
+        else None,
         colorway=PALETTE,
-        legend=dict(orientation="h", yanchor="bottom", y=-0.28, x=0, font=dict(size=10))
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=-0.28,
+            x=0,
+            font=dict(size=10, color="#9aa0ad"),
+            bgcolor="rgba(0,0,0,0)",
+        )
         if legend
         else None,
-        hoverlabel=dict(font_size=12),
+        hoverlabel=dict(
+            font_size=12,
+            bgcolor="#161a22",
+            bordercolor="rgba(238,237,232,0.17)",
+            font=dict(color="#f2f0e9", family="Inter, sans-serif"),
+        ),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
     )
-    fig.update_xaxes(showgrid=False, linecolor=GRID)
-    fig.update_yaxes(gridcolor=GRID, zeroline=False)
+    fig.update_xaxes(
+        showgrid=False,
+        linecolor="rgba(238,237,232,0.10)",
+        tickfont=dict(color="#9aa0ad"),
+        title_font=dict(color="#9aa0ad"),
+    )
+    fig.update_yaxes(
+        gridcolor=GRID,
+        zeroline=False,
+        tickfont=dict(color="#9aa0ad"),
+        title_font=dict(color="#9aa0ad"),
+    )
     return fig
 
 
@@ -296,8 +691,19 @@ def download_csv(df: pd.DataFrame, label: str, filename: str):
 # ---------------------------------------------------------------------------
 
 with st.sidebar:
-    st.markdown("### Freedom Property Investors")
-    st.caption("Marketing analytics - independent sample")
+    st.markdown(
+        """
+        <div class="brand">
+            <div class="brand-mark">FPI</div>
+            <div>
+                <div class="brand-name">Freedom Property Investors</div>
+                <div class="brand-sub">Marketing analytics · independent sample</div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    st.markdown('<div class="nav-label">Pages</div>', unsafe_allow_html=True)
     page = st.radio(
         "View",
         [
@@ -312,27 +718,42 @@ with st.sidebar:
         label_visibility="collapsed",
     )
     st.divider()
-    st.markdown("**Filters**")
-
-    date_range = st.date_input(
-        "Date range",
-        value=(START, END),
-        min_value=START,
-        max_value=END,
-    )
-    if isinstance(date_range, (tuple, list)):
-        if len(date_range) == 2:
-            start_date, end_date = date_range
-        elif len(date_range) == 1:
-            start_date = end_date = date_range[0]
-        else:
-            start_date, end_date = START, END
-    else:
-        start_date = end_date = date_range
 
     all_channels = sorted(FACT["channel"].unique())
-    channels = st.multiselect("Channels", all_channels, default=all_channels)
-    segments = st.multiselect("Segments", list(SEGMENTS), default=list(SEGMENTS))
+    start_date, end_date = START, END
+    channels = all_channels
+    segments = list(SEGMENTS)
+
+    with st.expander("Filters", expanded=False):
+        date_range = st.date_input(
+            "Date range",
+            value=(START, END),
+            min_value=START,
+            max_value=END,
+        )
+        if isinstance(date_range, (tuple, list)):
+            if len(date_range) == 2:
+                start_date, end_date = date_range
+            elif len(date_range) == 1:
+                start_date = end_date = date_range[0]
+            else:
+                start_date, end_date = START, END
+        else:
+            start_date = end_date = date_range
+
+        channels = st.multiselect("Channels", all_channels, default=all_channels)
+        segments = st.multiselect("Segments", list(SEGMENTS), default=list(SEGMENTS))
+
+    if channels == all_channels and segments == list(SEGMENTS):
+        filter_summary = "All channels · All segments<br>Full sample period"
+    else:
+        ch = "All channels" if channels == all_channels else f"{len(channels)} channels"
+        sg = "All segments" if segments == list(SEGMENTS) else f"{len(segments)} segments"
+        filter_summary = (
+            f"{ch} · {sg}<br>"
+            f"{pd.Timestamp(start_date):%d %b %Y} – {pd.Timestamp(end_date):%d %b %Y}"
+        )
+    st.markdown(f'<div class="filter-summary">{filter_summary}</div>', unsafe_allow_html=True)
 
     st.divider()
     with st.expander("About the sample data"):
@@ -564,7 +985,7 @@ if page == "Executive summary":
             orientation="h",
             text=steps_df["Rate"].map(lambda v: f"{v * 100:.1f}%"),
             color="Rate",
-            color_continuous_scale=[[0, "#E8CF92"], [1, NAVY]],
+            color_continuous_scale=[[0, "#2a3442"], [1, ACCENT]],
         )
         fig.update_traces(textposition="outside", cliponaxis=False)
         fig.update_layout(coloraxis_showscale=False)
@@ -969,7 +1390,7 @@ elif page == "Lead quality":
             y="conversion_pct",
             text=resp["conversion_pct"].map(lambda v: f"{v:.1f}%"),
             color="conversion_pct",
-            color_continuous_scale=[[0, "#E8CF92"], [1, NAVY]],
+            color_continuous_scale=[[0, "#2a3442"], [1, ACCENT]],
             hover_data={"leads": ":,.0f", "members": ":,.0f"},
         )
         fig.update_layout(coloraxis_showscale=False)
@@ -1218,7 +1639,7 @@ elif page == "Creative analytics":
         x="format",
         y="cac",
         color="cac",
-        color_continuous_scale=[[0, "#E8CF92"], [1, NAVY]],
+        color_continuous_scale=[[0, "#2a3442"], [1, ACCENT]],
         text=fmt.sort_values("cac")["cac"].map(lambda v: f"${v:,.0f}" if pd.notna(v) else "-"),
     )
     fig.update_layout(coloraxis_showscale=False)

@@ -1293,7 +1293,7 @@ elif page == "North star":
     )
     fig.update_layout(coloraxis_showscale=False, xaxis_title="Additional held quality sessions")
     st.plotly_chart(
-        style_fig(fig, 360, "HQS impact of a realistic lift in each driver", legend=False),
+        style_fig(fig, 360, "HQS impact of an illustrative lift in each driver", legend=False),
         width="stretch",
     )
     st.dataframe(

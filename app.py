@@ -72,28 +72,28 @@ CSS = """
 <style>
     @font-face {
         font-family: "Inter";
-        src: url("/app/static/fonts/inter.woff2") format("woff2");
+        src: url("./app/static/fonts/inter.woff2") format("woff2");
         font-weight: 400 700;
         font-style: normal;
         font-display: swap;
     }
     @font-face {
         font-family: "Fraunces";
-        src: url("/app/static/fonts/fraunces.woff2") format("woff2");
+        src: url("./app/static/fonts/fraunces.woff2") format("woff2");
         font-weight: 300 600;
         font-style: normal;
         font-display: swap;
     }
     @font-face {
         font-family: "Fraunces";
-        src: url("/app/static/fonts/fraunces-italic.woff2") format("woff2");
+        src: url("./app/static/fonts/fraunces-italic.woff2") format("woff2");
         font-weight: 300 600;
         font-style: italic;
         font-display: swap;
     }
     @font-face {
         font-family: "JetBrains Mono";
-        src: url("/app/static/fonts/jetbrains-mono.woff2") format("woff2");
+        src: url("./app/static/fonts/jetbrains-mono.woff2") format("woff2");
         font-weight: 400 600;
         font-style: normal;
         font-display: swap;
